@@ -1,10 +1,6 @@
-# LUMI AI Factory Agent Environment
+# Roihu Agent Environment
 
-This repository contains files for running AI coding agents on LUMI inside a containerized environment.
-For guidance on using the environment, please see the
-[agent environment documentation](https://docs.lumi-supercomputer.eu/laif/software/agent-infrastructure/)
-in the LUMI user guide. For general instructions about running AI agents on LUMI, see the
-[LUMI AI agent guide](https://docs.lumi-supercomputer.eu/development/ai-tools/ai-agent-guide/).
+This is a port of LUMI AI Factory Agent Environment to Roihu. See original repository for details: https://github.com/lumi-ai-factory/laifs-agent-env/tree/main
 
 ## Contents
 

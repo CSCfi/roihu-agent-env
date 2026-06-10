@@ -33,4 +33,4 @@ for path in "${EXTRA_DIRS[@]}"; do
     fi
 done
 
-singularity run -c -B "$BIND_STRING" --cwd "$PWD" "$CONTAINER" "$@"
+apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$CONTAINER" "$@"
