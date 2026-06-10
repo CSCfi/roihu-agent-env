@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%labels
+    Author mira.salmensaari@csc.fi
+
+%arguments
+    GOOSE_CONFIG_DIR=/opt/goose/config
+    GOOSE_INSTALL_DIR=/opt/goose/bin
+#    GOOSE_VERSION=
+
+%files
+    config/goose/ {{ GOOSE_CONFIG_DIR }}
+    config/AGENTS.md {{ GOOSE_CONFIG_DIR }}/
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export GOOSE_BIN_DIR={{ GOOSE_INSTALL_DIR }}
+
+    # Upgrade system packages and install curl for fetching install script
+    apt-get update && apt-get upgrade -y && apt-get install -y curl \
+        bzip2
+
+    curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | \
+        CONFIGURE=false bash
+
+%environment
+    export PATH={{ GOOSE_INSTALL_DIR }}:$PATH
+
+    export GOOSE_CONFIG={{ GOOSE_CONFIG_DIR }}/opencode.json
+    export GOOSE_TUI_CONFIG={{ GOOSE_CONFIG_DIR }}/tui.json
+
+    # TODO does something like this exist?
+#    export OPENCODE_DISABLE_AUTOUPDATE=1
+
+#%test
+#    HOME="$(mktemp -d)" goose debug info
+
+%runscript
+    goose "$@"
