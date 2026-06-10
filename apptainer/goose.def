@@ -5,13 +5,12 @@ From: ubuntu:24.04
     Author mira.salmensaari@csc.fi
 
 %arguments
-    GOOSE_CONFIG_DIR=/opt/goose/config
     GOOSE_INSTALL_DIR=/opt/goose/bin
 #    GOOSE_VERSION=
 
-%files
-    config/goose/ {{ GOOSE_CONFIG_DIR }}
-    config/AGENTS.md {{ GOOSE_CONFIG_DIR }}/
+#%files
+#    # This probably isn't read as is. Maybe use GOOSE_MOIM_MESSAGE_TEXT env variable or .goosehints file? Doesn't seem like goose uses AGENTS.md at all?
+#    config/AGENTS.md {{ GOOSE_CONFIG_DIR }}/
 
 %post
     export DEBIAN_FRONTEND=noninteractive
@@ -27,8 +26,12 @@ From: ubuntu:24.04
 %environment
     export PATH={{ GOOSE_INSTALL_DIR }}:$PATH
 
-    export GOOSE_CONFIG={{ GOOSE_CONFIG_DIR }}/opencode.json
-    export GOOSE_TUI_CONFIG={{ GOOSE_CONFIG_DIR }}/tui.json
+    # Goose doesn't appear to support multiple configuration files. Env variables take precedence over local config, so probably makes most sense to set critical config that way.
+    export GOOSE_TELEMETRY_ENABLED="false"
+    export GOOSE_MODE="approve"
+
+#    export GOOSE_CONFIG={{ GOOSE_CONFIG_DIR }}/opencode.json
+#    export GOOSE_TUI_CONFIG={{ GOOSE_CONFIG_DIR }}/tui.json
 
     # TODO does something like this exist?
 #    export OPENCODE_DISABLE_AUTOUPDATE=1
