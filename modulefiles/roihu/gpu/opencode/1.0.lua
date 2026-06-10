@@ -21,13 +21,13 @@ More information:
 -- Set module-level Singularity bind paths
 --
 
-setenv("SINGULARITY_BIND", "/appl")
+-- setenv("APPTAINER_BIND", "/appl")
 
 --
 -- Add executables to `PATH`
 --
 
-prepend_path("PATH", "/appl/local/laifs/agents/bin")
+prepend_path("PATH", "/users/msalmens/agent-env/laifs-agent-env/bin/roihu/gpu")
 
 --
 -- Print load message

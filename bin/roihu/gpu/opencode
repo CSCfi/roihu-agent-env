@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# opencode
+#
+# Wrapper script for running OpenCode in a container.
+# Part of the `lumi-aif-agents` module.
+#
+
+CONTAINER=/users/msalmens/agent-env/laifs-agent-env/images/opencode-gpu.sif
+
+## TODO check if this is necessary
+#if [[ $( hostname ) == *"login"* ]]; then
+#    echo "ERROR: Do not run AI agents on the login node."
+#    exit 1
+#fi
+
+BIND_STRING="$PWD"  # Bind current working directory by default
+
+APP_DIRS=(
+    "$HOME/.cache/opencode"
+    "$HOME/.config/opencode"
+    "$HOME/.local/share/opencode"
+    "$HOME/.local/state/opencode"
+)
+
+EXTRA_DIRS=(
+    "$HOME/.agents"
+    "$HOME/.claude"
+)
+
+for path in "${APP_DIRS[@]}"; do
+    mkdir -p "$path"
+    BIND_STRING="${BIND_STRING},${path}"
+done
+
+for path in "${EXTRA_DIRS[@]}"; do
+    if [[ -d "$path" ]]; then
+        BIND_STRING="${BIND_STRING},${path}"
+    fi
+done
+
+apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$CONTAINER" "$@"
