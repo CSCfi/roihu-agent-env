@@ -38,4 +38,4 @@ for path in "${EXTRA_DIRS[@]}"; do
 done
 
 # AGENT_IMAGE is set by the module.
-apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$AGENT_IMAGE" "$@"
+apptainer run -c -B "$BIND_STRING" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
