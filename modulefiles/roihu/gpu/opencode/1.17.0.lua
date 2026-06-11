@@ -21,7 +21,7 @@ More information:
 -- Specify the container image.
 --
 
-setenv("APPTAINER_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode-gpu-1.17.0.sif")
+setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode-gpu-1.17.0.sif")
 
 --
 -- Set module-level Singularity bind paths

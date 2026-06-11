@@ -23,7 +23,7 @@ More information:
 -- Specify the container image.
 --
 
-setenv("APPTAINER_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/goose-cpu-1.37.0.sif")
+setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/goose-cpu-1.37.0.sif")
 
 --
 -- Set module-level Singularity bind paths
