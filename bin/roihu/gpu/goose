@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# goose
+#
+# Wrapper script for running Goose in a container.
+#
+
+CONTAINER=/users/msalmens/agent-env/laifs-agent-env/images/goose-gpu.sif
+
+## TODO check if this is necessary
+#if [[ $( hostname ) == *"login"* ]]; then
+#    echo "ERROR: Do not run AI agents on the login node."
+#    exit 1
+#fi
+
+BIND_STRING="$PWD"  # Bind current working directory by default
+
+# TODO: Check which of these paths are necessary for Goose and if there are some new ones
+APP_DIRS=(
+#    "$HOME/.cache/goose"
+    "$HOME/.config/goose"
+    "$HOME/.local/share/goose"
+#    "$HOME/.local/state/goose"
+)
+
+EXTRA_DIRS=(
+    "$HOME/.agents"
+    "$HOME/.claude"
+)
+
+for path in "${APP_DIRS[@]}"; do
+    mkdir -p "$path"
+    BIND_STRING="${BIND_STRING},${path}"
+done
+
+for path in "${EXTRA_DIRS[@]}"; do
+    if [[ -d "$path" ]]; then
+        BIND_STRING="${BIND_STRING},${path}"
+    fi
+done
+
+apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$CONTAINER" "$@"

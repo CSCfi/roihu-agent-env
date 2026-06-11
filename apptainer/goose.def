@@ -6,7 +6,7 @@ From: ubuntu:24.04
 
 %arguments
     GOOSE_INSTALL_DIR=/opt/goose/bin
-#    GOOSE_VERSION=
+    APP_VERSION=1.37.0
 
 #%files
 #    # This probably isn't read as is. Maybe use GOOSE_MOIM_MESSAGE_TEXT env variable or .goosehints file? Doesn't seem like goose uses AGENTS.md at all?
@@ -21,23 +21,18 @@ From: ubuntu:24.04
         bzip2
 
     curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | \
-        CONFIGURE=false bash
+        GOOSE_VERSION={{ APP_VERSION }} CONFIGURE=false bash
 
 %environment
     export PATH={{ GOOSE_INSTALL_DIR }}:$PATH
 
-    # Goose doesn't appear to support multiple configuration files. Env variables take precedence over local config, so probably makes most sense to set critical config that way.
+    # Goose doesn't appear to support multiple configuration files. 
+    # Env variables take precedence over local config, so probably makes most sense to set critical config that way.
     export GOOSE_TELEMETRY_ENABLED="false"
     export GOOSE_MODE="approve"
 
-#    export GOOSE_CONFIG={{ GOOSE_CONFIG_DIR }}/opencode.json
-#    export GOOSE_TUI_CONFIG={{ GOOSE_CONFIG_DIR }}/tui.json
-
-    # TODO does something like this exist?
-#    export OPENCODE_DISABLE_AUTOUPDATE=1
-
-#%test
-#    HOME="$(mktemp -d)" goose debug info
+%test
+    goose info
 
 %runscript
     goose "$@"
