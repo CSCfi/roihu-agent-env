@@ -14,7 +14,7 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 
 ```bash
 # Load environment module
-ml use ´pwd´/modulefiles/roihu/<cpu or gpu>
+ml use modulefiles/roihu/<cpu or gpu>
 ml opencode
 # or
 ml goose
@@ -24,5 +24,3 @@ opencode
 # or
 goose
 ```
-
-Goose requires running `goose configure` when using it for the first time.

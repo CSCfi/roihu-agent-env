@@ -5,9 +5,6 @@
 # Wrapper script for running Goose in a container.
 #
 
-#CONTAINER=/users/msalmens/agent-env/laifs-agent-env/images/goose-cpu.sif
-CONTAINER=/home/msalmens/ai-project/laifs-agent-env/goose-local.sif
-
 ## TODO check if this is necessary
 #if [[ $( hostname ) == *"login"* ]]; then
 #    echo "ERROR: Do not run AI agents on the login node."
@@ -21,7 +18,7 @@ APP_DIRS=(
 #    "$HOME/.cache/goose"
     "$HOME/.config/goose"
     "$HOME/.local/share/goose"
-#    "$HOME/.local/state/goose"
+    "$HOME/.local/state/goose"
 )
 
 EXTRA_DIRS=(
@@ -40,4 +37,5 @@ for path in "${EXTRA_DIRS[@]}"; do
     fi
 done
 
-apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$CONTAINER" "$@"
+# APPTAINER_IMAGE is set by the module.
+apptainer run -c -B "$BIND_STRING" --cwd "$PWD" "$APPTAINER_IMAGE" "$@"
