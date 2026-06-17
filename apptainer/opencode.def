@@ -12,6 +12,7 @@ From: ubuntu:24.04
 %files
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}
     config/AGENTS.md {{ OPENCODE_CONFIG_DIR }}/
+    socket-bridge/socket-bridge /opt/socket-bridge
 
 %post
     export DEBIAN_FRONTEND=noninteractive
