@@ -24,7 +24,17 @@ APP_DIRS=(
 EXTRA_DIRS=(
     "$HOME/.agents"
     "$HOME/.claude"
+    # "/tmp/$USER"
 )
+# Uncomment the /tmp/$USER line and the lines below to start Slurm MCP on startup.
+
+# # Start the host-side server (not in the container)
+# /users/ansoneli/slurm-mcp &
+# SERVER_PID=$!
+# trap "kill $SERVER_PID 2>/dev/null" EXIT
+
+# # Wait until it's actually listening before Goose dials it
+# for _ in $(seq 1 50); do [[ -S "/tmp/$USER/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"
