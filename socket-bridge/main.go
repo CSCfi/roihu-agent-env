@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"os"
@@ -12,7 +13,13 @@ The Opencode / Goose agent thinks the MCP server is local and uses STDIO, but th
 pipe the requests and responses outside the container.
 */
 func main() {
-	c, err := net.Dial("unix", "/tmp/slurm-mcp.sock")
+	uname := os.Getenv("USER")
+	if uname == "" {
+		fmt.Print("Couldn't determine user (set $USER)")
+		os.Exit(1)
+	}
+	sock := fmt.Sprintf("/tmp/%s/slurm-mcp.sock", uname)
+	c, err := net.Dial("unix", sock)
 	if err != nil {
 		panic(err)
 

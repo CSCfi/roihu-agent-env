@@ -23,7 +23,7 @@ More information:
 -- Specify the container image.
 --
 
-setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode-cpu-1.17.0.sif")
+setenv("AGENT_IMAGE", "/users/ansoneli/roihu-agent-env/images/opencode-cpu-1.17.0.sif")
 
 --
 -- Set module-level Singularity bind paths
@@ -36,7 +36,7 @@ setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode
 -- Add executables to `PATH`
 --
 
-prepend_path("PATH", "/users/msalmens/agent-env/roihu-agent-env/bin/roihu/opencode")
+prepend_path("PATH", "/users/ansoneli/roihu-agent-env/bin/roihu/opencode")
 
 --
 -- Print load message

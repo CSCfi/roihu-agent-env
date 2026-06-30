@@ -7,7 +7,7 @@ TARGET_VERSIONS=("1.17.0" "1.37.0")
 
 # Build socket bridge binary
 cd socket-bridge
-CGO_ENABLED=0 go build -o socket-bridge/socket-bridge socket-bridge
+CGO_ENABLED=0 go build -o socket-bridge .
 cd ..
 
 # Parses if we are on roihu-cpu or roihu-gpu.
