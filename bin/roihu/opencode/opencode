@@ -23,15 +23,23 @@ APP_DIRS=(
 EXTRA_DIRS=(
     "$HOME/.agents"
     "$HOME/.claude"
-    "/tmp/$USER"
+    "$TMPDIR"
 )
+# SLURM_MCP_BIN is exported by the module; fall back to CWD if run outside it.
+# Since build_containers.sh isn't always run first, fail loudly if it's missing.
+MCP_BIN="${SLURM_MCP_BIN:-$PWD/slurm-mcp-bin}"
+if [[ ! -x "$MCP_BIN" ]]; then
+    echo "ERROR: $MCP_BIN not found — run build_containers.sh first." >&2
+    exit 1
+fi
+
 # Start the host-side server (not in the container)
-/users/ansoneli/slurm-mcp &
+"$MCP_BIN" &
 SERVER_PID=$!
 trap "kill $SERVER_PID 2>/dev/null" EXIT
 
 # Wait until it's actually listening before opencode dials it
-for _ in $(seq 1 50); do [[ -S "/tmp/$USER/slurm-mcp.sock" ]] && break; sleep 0.1; done
+for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"

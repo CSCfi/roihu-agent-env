@@ -23,7 +23,16 @@ More information:
 -- Specify the container image.
 --
 
-setenv("AGENT_IMAGE", "/users/ansoneli/roihu-agent-env/images/goose-cpu-1.37.0.sif")
+-- Resolve the environment root from this modulefile's own location. myFileName()
+-- is an Lmod builtin returning this file's absolute path; strip /modulefiles/...
+-- to get the install root. (Lmod reads modulefiles with its own Lua interpreter,
+-- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
+local root = myFileName():gsub("/modulefiles/.*$", "")
+
+setenv("AGENT_IMAGE", pathJoin(root, "images/goose-cpu-1.37.0.sif"))
+
+-- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
+setenv("SLURM_MCP_BIN", pathJoin(root, "slurm-mcp-bin"))
 
 --
 -- Set module-level Singularity bind paths
@@ -36,7 +45,7 @@ setenv("AGENT_IMAGE", "/users/ansoneli/roihu-agent-env/images/goose-cpu-1.37.0.s
 -- Add executables to `PATH`
 --
 
-prepend_path("PATH", "/users/ansoneli/roihu-agent-env/bin/roihu/goose")
+prepend_path("PATH", pathJoin(root, "bin/roihu/goose"))
 
 --
 -- Print load message

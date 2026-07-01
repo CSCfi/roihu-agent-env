@@ -18,7 +18,8 @@ func main() {
 		fmt.Print("Couldn't determine user (set $USER)")
 		os.Exit(1)
 	}
-	sock := fmt.Sprintf("/tmp/%s/slurm-mcp.sock", uname)
+	tmp := os.Getenv("TMDIR")
+	sock := fmt.Sprintf("%s/slurm-mcp.sock", tmp)
 	c, err := net.Dial("unix", sock)
 	if err != nil {
 		panic(err)

@@ -41,7 +41,7 @@ any command needed.
 
 When working on Roihu, the working directory is typically under either the user home directory or a
 project-specific directory, which is in turn located under one of the top-level directories of
-`/project` and `/scratch`.
+`/projappl` and `/scratch`.
 
 All of these directories, including the user home directory, are on Lustre file systems. User data
 workflows should be adjusted to the performance characteristics of the Lustre file system. In
