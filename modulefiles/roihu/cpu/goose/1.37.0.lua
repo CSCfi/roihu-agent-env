@@ -20,14 +20,24 @@ More information:
 ]])
 
 --
--- Specify the container image.
+-- Make this module mutually exclusive with the opencode agent environment.
+-- Both provide overlapping wrappers and set the same env vars (AGENT_IMAGE,
+-- SLURM_MCP_BIN), so only one may be loaded at a time. conflict() makes Lmod
+-- refuse to load this module while any version of opencode is loaded.
 --
+
+conflict("opencode")
+
 
 -- Resolve the environment root from this modulefile's own location. myFileName()
 -- is an Lmod builtin returning this file's absolute path; strip /modulefiles/...
 -- to get the install root. (Lmod reads modulefiles with its own Lua interpreter,
 -- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
 local root = myFileName():gsub("/modulefiles/.*$", "")
+
+--
+-- Specify the container image.
+--
 
 setenv("AGENT_IMAGE", pathJoin(root, "images/goose-cpu-1.37.0.sif"))
 
