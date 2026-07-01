@@ -22,7 +22,7 @@ More information:
 --
 -- Make this module mutually exclusive with the goose agent environment.
 -- Both provide overlapping wrappers and set the same env vars (AGENT_IMAGE,
--- SLURM_MCP_BIN), so only one may be loaded at a time. conflict() makes Lmod
+-- SLURM_MCP_DIR), so only one may be loaded at a time. conflict() makes Lmod
 -- refuse to load this module while any version of goose is loaded.
 --
 
@@ -42,7 +42,7 @@ local root = myFileName():gsub("/modulefiles/.*$", "")
 setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-cpu-1.17.0.sif"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
-setenv("SLURM_MCP_BIN", pathJoin(root, "slurm-mcp-bin"))
+setenv("SLURM_MCP_DIR", root)
 
 --
 -- Set module-level Singularity bind paths

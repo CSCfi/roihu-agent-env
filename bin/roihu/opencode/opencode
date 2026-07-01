@@ -25,11 +25,26 @@ EXTRA_DIRS=(
     "$HOME/.claude"
     "$TMPDIR"
 )
-# SLURM_MCP_BIN is exported by the module; fall back to CWD if run outside it.
-# Since build_containers.sh isn't always run first, fail loudly if it's missing.
-MCP_BIN="${SLURM_MCP_BIN:-$PWD/slurm-mcp-bin}"
-if [[ ! -x "$MCP_BIN" ]]; then
-    echo "ERROR: $MCP_BIN not found — run build_containers.sh first." >&2
+# Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
+#
+# Precedence:
+#   1. SLURM_MCP_BIN  — an explicit, pinned path to one binary (set by the module
+#      or the caller). Wins if it points at an executable.
+#   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
+#
+# SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
+MCP_DIR="${SLURM_MCP_DIR:-$PWD}"
+if [[ -n "$SLURM_MCP_BIN" && -x "$SLURM_MCP_BIN" ]]; then
+    MCP_BIN="$SLURM_MCP_BIN"
+else
+    # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
+    # a plain lexical sort). compgen lists matches without a literal fallback when
+    # none exist, so an empty result is handled by the check below.
+    MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-v*" | sort -V | tail -n1)
+fi
+
+if [[ -z "$MCP_BIN" || ! -x "$MCP_BIN" ]]; then
+    echo "ERROR: no slurm-mcp-v* found in $MCP_DIR — run build_containers.sh first." >&2
     exit 1
 fi
 
