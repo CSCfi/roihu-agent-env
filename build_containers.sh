@@ -32,6 +32,6 @@ mkdir -p images
 for (( i=0; i<${#TARGET_CONTAINERS[@]}; i++ )); do
     CONTAINER=${TARGET_CONTAINERS[i]}
     VERSION=${TARGET_VERSIONS[i]}
-    apptainer build --fakeroot --fix-perms --writable-tmpfs --build-arg "APP_VERSION=$VERSION" \
+    apptainer build --fakeroot --fix-perms --writable-tmpfs --force --build-arg "APP_VERSION=$VERSION" \
         images/${CONTAINER}-${NODE_TYPE}-${VERSION}.sif apptainer/${CONTAINER}.def
 done
