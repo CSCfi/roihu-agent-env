@@ -40,7 +40,7 @@ else
     # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
     # a plain lexical sort). compgen lists matches without a literal fallback when
     # none exist, so an empty result is handled by the check below.
-    MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-v*" | sort -V | tail -n1)
+    MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1)
 fi
 
 if [[ -z "$MCP_BIN" || ! -x "$MCP_BIN" ]]; then
