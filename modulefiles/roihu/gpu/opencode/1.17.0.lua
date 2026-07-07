@@ -20,8 +20,8 @@ More information:
 --
 -- Make this module mutually exclusive with the goose agent environment.
 -- Both provide overlapping wrappers and set the same env vars (AGENT_IMAGE,
--- SLURM_MCP_BIN), so only one may be loaded at a time. conflict() makes Lmod
--- refuse to load this module while any version of goose is loaded.
+-- SLURM_MCP_DIR), so only one may be loaded at a time. family() makes Lmod
+-- refuse to load this module while any module of the same family is loaded.
 --
 
 family("agent-env")
