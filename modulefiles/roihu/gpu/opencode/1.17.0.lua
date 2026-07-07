@@ -24,7 +24,7 @@ More information:
 -- refuse to load this module while any module of the same family is loaded.
 --
 
-family("agent-env")
+family("agent_env")
 
 --
 -- Specify the container image.
