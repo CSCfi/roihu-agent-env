@@ -20,10 +20,29 @@ More information:
 ]])
 
 --
+-- Make this module mutually exclusive with the goose agent environment.
+-- Both provide overlapping wrappers and set the same env vars (AGENT_IMAGE,
+-- SLURM_MCP_DIR), so only one may be loaded at a time. family() makes Lmod
+-- refuse to load this module while any module of the same family is loaded.
+--
+
+family("agent-env")
+
+
+-- Resolve the environment root from this modulefile's own location. myFileName()
+-- is an Lmod builtin returning this file's absolute path; strip /modulefiles/...
+-- to get the install root. (Lmod reads modulefiles with its own Lua interpreter,
+-- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
+local root = myFileName():gsub("/modulefiles/.*$", "")
+
+--
 -- Specify the container image.
 --
 
-setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode-cpu-1.17.0.sif")
+setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-cpu-1.17.0.sif"))
+
+-- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
+setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp"))
 
 --
 -- Set module-level Singularity bind paths
@@ -36,7 +55,7 @@ setenv("AGENT_IMAGE", "/users/msalmens/agent-env/roihu-agent-env/images/opencode
 -- Add executables to `PATH`
 --
 
-prepend_path("PATH", "/users/msalmens/agent-env/roihu-agent-env/bin/roihu/opencode")
+prepend_path("PATH", pathJoin(root, "bin/roihu/opencode"))
 
 --
 -- Print load message

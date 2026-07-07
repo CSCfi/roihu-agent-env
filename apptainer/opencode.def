@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:24.04
+From: satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
 
 %labels
     Author mira.salmensaari@csc.fi
@@ -12,13 +12,14 @@ From: ubuntu:24.04
 %files
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}
     config/AGENTS.md {{ OPENCODE_CONFIG_DIR }}/
+    socket-bridge/socket-bridge /opt/socket-bridge
 
 %post
     export DEBIAN_FRONTEND=noninteractive
     export OPENCODE_INSTALL_DIR={{ OPENCODE_INSTALL_DIR }}
 
     # Upgrade system packages and install curl for fetching install script
-    apt-get update && apt-get upgrade -y && apt-get install -y curl
+    dnf update && dnf install -y curl
 
     # Install OpenCode
     #

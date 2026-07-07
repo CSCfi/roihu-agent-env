@@ -8,9 +8,10 @@ From: ubuntu:24.04
     GOOSE_INSTALL_DIR=/opt/goose/bin
     APP_VERSION=1.37.0
 
-#%files
+%files
 #    # This probably isn't read as is. Maybe use GOOSE_MOIM_MESSAGE_TEXT env variable or .goosehints file? Doesn't seem like goose uses AGENTS.md at all?
 #    config/AGENTS.md {{ GOOSE_CONFIG_DIR }}/
+    socket-bridge/socket-bridge /opt/socket-bridge
 
 %post
     export DEBIAN_FRONTEND=noninteractive
