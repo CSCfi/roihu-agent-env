@@ -42,7 +42,7 @@ local root = myFileName():gsub("/modulefiles/.*$", "")
 setenv("AGENT_IMAGE", pathJoin(root, "images/goose-cpu-1.37.0.sif"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
-setenv("SLURM_MCP_DIR", root)
+setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp"))
 
 --
 -- Set module-level Singularity bind paths
