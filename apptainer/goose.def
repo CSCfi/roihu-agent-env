@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:24.04
+From: {{ BASE_IMAGE }}
 
 %labels
     Author mira.salmensaari@csc.fi
@@ -7,6 +7,7 @@ From: ubuntu:24.04
 %arguments
     GOOSE_INSTALL_DIR=/opt/goose/bin
     APP_VERSION=1.37.0
+    BASE_IMAGE=ubuntu:24.04
 
 %files
 #    # This probably isn't read as is. Maybe use GOOSE_MOIM_MESSAGE_TEXT env variable or .goosehints file? Doesn't seem like goose uses AGENTS.md at all?

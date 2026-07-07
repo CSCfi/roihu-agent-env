@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
+From: {{ BASE_IMAGE }}
 
 %labels
     Author mira.salmensaari@csc.fi
@@ -8,6 +8,7 @@ From: satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6b
     OPENCODE_CONFIG_DIR=/opt/opencode/config
     OPENCODE_INSTALL_DIR=/opt/opencode/bin
     APP_VERSION=1.17.0
+    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
 
 %files
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}
