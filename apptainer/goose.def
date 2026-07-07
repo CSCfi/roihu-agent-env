@@ -25,8 +25,20 @@ From: {{ BASE_IMAGE }}
     curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | \
         GOOSE_VERSION={{ APP_VERSION }} CONFIGURE=false bash
 
+    # Install dev tools
+    dnf install -y jq
+
+    # Install Go
+    curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
+    rm go1.26.4.linux-amd64.tar.gz
+
+%environment
+    export PATH=$PATH:/usr/local/go/bin
+
 %environment
     export PATH={{ GOOSE_INSTALL_DIR }}:$PATH
+    export PATH=$PATH:/usr/local/go/bin
 
     # Goose doesn't appear to support multiple configuration files. 
     # Env variables take precedence over local config, so probably makes most sense to set critical config that way.
@@ -37,4 +49,5 @@ From: {{ BASE_IMAGE }}
     goose info
 
 %runscript
+    . /opt/activate.sh
     goose "$@"

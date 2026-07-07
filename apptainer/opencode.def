@@ -32,7 +32,16 @@ From: {{ BASE_IMAGE }}
         sed 's/INSTALL_DIR=.*/INSTALL_DIR=$OPENCODE_INSTALL_DIR/' | \
         bash -s -- --version {{ APP_VERSION }}
 
+    # Install dev tools
+    dnf install -y jq
+
+    # Install Go
+    curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
+    rm go1.26.4.linux-amd64.tar.gz
+
 %environment
+    export PATH=$PATH:/usr/local/go/bin
     export PATH={{ OPENCODE_INSTALL_DIR }}:$PATH
 
     export OPENCODE_CONFIG={{ OPENCODE_CONFIG_DIR }}/opencode.json
@@ -44,4 +53,5 @@ From: {{ BASE_IMAGE }}
 %test
     HOME="$(mktemp -d)" opencode debug info
 %runscript
+    . /opt/activate.sh
     opencode "$@"
