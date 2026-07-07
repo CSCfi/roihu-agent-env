@@ -24,7 +24,7 @@ More information:
 -- refuse to load this module while any version of goose is loaded.
 --
 
-conflict("goose")
+family("agent-env")
 
 --
 -- Specify the container image.
