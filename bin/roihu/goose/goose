@@ -11,61 +11,117 @@
 #    exit 1
 #fi
 
-BIND_STRING="$PWD"  # Bind current working directory by default
+run_goose() {
+    BIND_STRING="$PWD"  # Bind current working directory by default
 
-# TODO: Check which of these paths are necessary for Goose and if there are some new ones
-APP_DIRS=(
-#    "$HOME/.cache/goose"
-    "$HOME/.config/goose"
-    "$HOME/.local/share/goose"
-    "$HOME/.local/state/goose"
-)
+    # TODO: Check which of these paths are necessary for Goose and if there are some new ones
+    APP_DIRS=(
+    #    "$HOME/.cache/goose"
+        "$HOME/.config/goose"
+        "$HOME/.local/share/goose"
+        "$HOME/.local/state/goose"
+    )
 
-EXTRA_DIRS=(
-    "$HOME/.agents"
-    "$HOME/.claude"
-    "$TMPDIR"
-)
-# Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
-#
-# Precedence:
-#   1. SLURM_MCP_BIN  — an explicit, pinned path to one binary (set by the module
-#      or the caller). Wins if it points at an executable.
-#   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
-#
-# SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
-MCP_DIR="${SLURM_MCP_DIR:-$PWD}"
-if [[ -n "$SLURM_MCP_BIN" && -x "$SLURM_MCP_BIN" ]]; then
-    MCP_BIN="$SLURM_MCP_BIN"
-else
-    # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
-    # a plain lexical sort). compgen lists matches without a literal fallback when
-    # none exist, so an empty result is handled by the check below.
-    MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1)
-fi
-
-if [[ -z "$MCP_BIN" || ! -x "$MCP_BIN" ]]; then
-    echo "ERROR: no slurm-mcp-v* found in $MCP_DIR — run build_containers.sh first." >&2
-    exit 1
-fi
-
-"$MCP_BIN" &
-SERVER_PID=$!
-trap "kill $SERVER_PID 2>/dev/null" EXIT
-
-# Wait until it's actually listening before Goose dials it
-for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
-
-for path in "${APP_DIRS[@]}"; do
-    mkdir -p "$path"
-    BIND_STRING="${BIND_STRING},${path}"
-done
-
-for path in "${EXTRA_DIRS[@]}"; do
-    if [[ -d "$path" ]]; then
-        BIND_STRING="${BIND_STRING},${path}"
+    EXTRA_DIRS=(
+        "$HOME/.agents"
+        "$HOME/.claude"
+        "$TMPDIR"
+    )
+    # Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
+    #
+    # Precedence:
+    #   1. SLURM_MCP_BIN  — an explicit, pinned path to one binary (set by the module
+    #      or the caller). Wins if it points at an executable.
+    #   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
+    #
+    # SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
+    MCP_DIR="${SLURM_MCP_DIR:-$PWD}"
+    if [[ -n "$SLURM_MCP_BIN" && -x "$SLURM_MCP_BIN" ]]; then
+        MCP_BIN="$SLURM_MCP_BIN"
+    else
+        # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
+        # a plain lexical sort). compgen lists matches without a literal fallback when
+        # none exist, so an empty result is handled by the check below.
+        MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1)
     fi
-done
 
-# AGENT_IMAGE is set by the module.
-apptainer run -c -B "$BIND_STRING" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
+    if [[ -z "$MCP_BIN" || ! -x "$MCP_BIN" ]]; then
+        echo "ERROR: no slurm-mcp-v* found in $MCP_DIR — run build_containers.sh first." >&2
+        exit 1
+    fi
+
+    "$MCP_BIN" &
+    SERVER_PID=$!
+    trap "kill $SERVER_PID 2>/dev/null" EXIT
+
+    # Wait until it's actually listening before Goose dials it
+    for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
+
+    for path in "${APP_DIRS[@]}"; do
+        mkdir -p "$path"
+        BIND_STRING="${BIND_STRING},${path}"
+    done
+
+    for path in "${EXTRA_DIRS[@]}"; do
+        if [[ -d "$path" ]]; then
+            BIND_STRING="${BIND_STRING},${path}"
+        fi
+    done
+
+    # AGENT_IMAGE is set by the module.
+    apptainer run -c -B "$BIND_STRING" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
+}
+
+goose_roihu_init() {
+
+    #
+    # Initialize default configuration for Goose
+    # 
+    # Goose only seems to look for configuration in user's home directory,
+    # so this allows us to provide a default configuration for users.
+    # Any critical settings should be set by environment variables in the 
+    # container instead, because these default settings can be freely overwritten.
+    #
+
+    # Lazy way to sort of implement --help and -h because those also trip the check.
+    if [ -n "$1" ] && [ "$1" != "--force" ]; then
+        echo "Usage: goose roihu-init [--force]"
+        echo "Initialize default configuration for Goose."
+        echo ""
+        echo "--force           Rewrite existing configuration with defaults."
+        return 1
+    fi
+
+    # Check if goose init was already ran previously.
+    if [ "$1" != "--force" ] && [ -e ~/.config/goose/config.yaml ]
+    then
+        echo "Error: Goose configuration already exists."
+        echo "    You can run \"goose roihu-init --force\" to reset it back to default"
+        return 1
+    fi
+
+    # Check if GOOSE_INIT_FILES is set. Makes it easier to debug errors in the module file.
+    if [ -z "$GOOSE_INIT_FILES" ]; then
+        echo "GOOSE_INIT_FILES variable is empty. This indicates an issue with the module file."
+        return 1
+    else
+        local FILES=( $GOOSE_INIT_FILES )
+    fi
+
+    $( mkdir -p ~/.config/goose )
+    for file in "${FILES[@]}"
+    do
+        # Strip file paths
+        local fname=${file##*/}
+        $( cp "$file" ~/.config/goose/"$fname" )
+    done
+    return 0
+}
+
+if [ "$1" = "roihu-init" ]; then
+    goose_roihu_init "$2"
+elif [ -e ~/.config/goose/config.yaml ]; then
+    run_goose "$@"
+else
+    echo "Error: Run \"goose roihu-init\" first to initialize default configuration"
+fi

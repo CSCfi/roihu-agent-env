@@ -35,10 +35,19 @@ family("agent_env")
 local root = myFileName():gsub("/modulefiles/.*$", "")
 
 --
--- Specify the container image.
+-- Set necessary environment variables for the wrapper script
 --
 
+-- Specify the container image.
 setenv("AGENT_IMAGE", pathJoin(root, "images/goose-cpu-1.37.0.sif"))
+
+-- Specify default configuration location.
+local init_files = {"config/goose/config.yaml", "config/goose/goosehints.md"}
+local init_filepaths = ""
+for key,file in pairs(init_files) do
+    init_filepaths = init_filepaths .. " " .. pathJoin(root, file)
+end
+setenv("GOOSE_INIT_FILES", init_filepaths)
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
 setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp"))
@@ -82,3 +91,12 @@ prepend_path("PATH", pathJoin(root, "bin/roihu/goose"))
 --        "Run `module help " .. myModuleName() .. "` for more information.\n"
 --    )
 --end
+
+-- TODO: Add similar warning as the commented out LAIF one to this.
+if mode() == "load" then
+    LmodMessage(
+        "\n" ..
+        "If this is your first time using Goose, " ..
+        "run \"goose roihu-init\" first to setup default configuration.\n"
+    )
+end
