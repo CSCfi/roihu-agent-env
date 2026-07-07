@@ -7,7 +7,7 @@ From: {{ BASE_IMAGE }}
 %arguments
     GOOSE_INSTALL_DIR=/opt/goose/bin
     APP_VERSION=1.37.0
-    BASE_IMAGE=ubuntu:24.04
+    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
 
 %files
 #    # This probably isn't read as is. Maybe use GOOSE_MOIM_MESSAGE_TEXT env variable or .goosehints file? Doesn't seem like goose uses AGENTS.md at all?
