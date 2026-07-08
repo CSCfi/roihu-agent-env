@@ -13,10 +13,8 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 ## Usage
 
 ```bash
-# In Roihu:
-cd /projappl/project_2001659/ansoneli/roihu-agent-env
-# Load environment module
-ml use modulefiles/roihu/<cpu or gpu>
+# Load environment module, use either cpu or gpu depending on your current node.
+ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu>
 ml opencode
 # or
 ml goose
@@ -26,9 +24,14 @@ opencode
 # or
 goose
 ```
-NB: If you use the Opencode Zen provider (the default), all of your data will be used for training.
+> [!WARNING]
+> If you use the Opencode Zen provider (the default), all of your data will be used for training.
 
-If you want to use Opencode with inference via Aitta, you should get your API key from [here](https://aitta-auth.csc.fi/myToken), and save it to the $AITTA_KEY env variable before you start the agent.
+To use Opencode with inference via Aitta, you should get your API key from [here](https://aitta-auth.csc.fi/myToken), and save it to the $AITTA_KEY env variable before you start the agent.
 ```bash
 export AITTA_KEY=<YOUR_KEY_HERE>
 ```
+
+If you have a different API you want to use with Opencode, you can add it by typing /connect after launching Opencode. Alternatively, you create a config at ~/.config/opencode.json or your project folder and following the [instructions](https://opencode.ai/docs/providers) by Opencode.
+
+For Goose, you load the environment module as above, and then run goose configure. Follow the prompts, and consult the [instructions](https://goose-docs.ai/docs/getting-started/providers/#configure-provider-and-model) when unsure.
