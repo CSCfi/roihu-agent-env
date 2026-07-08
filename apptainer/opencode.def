@@ -21,7 +21,7 @@ From: {{ BASE_IMAGE }}
     export OPENCODE_INSTALL_DIR={{ OPENCODE_INSTALL_DIR }}
 
     # Upgrade system packages and install curl for fetching install script
-    dnf update && dnf install -y curl
+    dnf update -y && dnf install -y curl
 
     # Install OpenCode
     #

@@ -20,7 +20,7 @@ From: {{ BASE_IMAGE }}
     export GOOSE_BIN_DIR={{ GOOSE_INSTALL_DIR }}
 
     # Upgrade system packages and install curl for fetching install script
-    dnf update && dnf install -y curl \
+    dnf update -y && dnf install -y curl \
         bzip2
 
     curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | \

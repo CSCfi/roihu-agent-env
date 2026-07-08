@@ -16,6 +16,7 @@ else
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+OLD_DIR=$(pwd)
 cd $SCRIPT_DIR
 
 # Fetch the documentation subfolder from the csc-user-guide repo.
@@ -58,3 +59,6 @@ for (( i=0; i<${#TARGET_CONTAINERS[@]}; i++ )); do
     apptainer build --fakeroot --fix-perms --writable-tmpfs --force --build-arg "APP_VERSION=$VERSION" --build-arg "BASE_IMAGE=$BASE_IMAGE" \
         images/${CONTAINER}-${NODE_TYPE}-${VERSION}.sif apptainer/${CONTAINER}.def
 done
+chgrp -R project_2001659 images
+chgrp -R project_2001659 bin
+cd $OLD_DIR
