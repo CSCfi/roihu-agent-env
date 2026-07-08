@@ -34,7 +34,7 @@ From: {{ BASE_IMAGE }}
         bash -s -- --version {{ APP_VERSION }}
 
     # Install dev tools
-    dnf install -y jq
+    dnf install -y jq perf strace
 
     # Install Go
     curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz

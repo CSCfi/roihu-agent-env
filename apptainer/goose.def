@@ -27,7 +27,7 @@ From: {{ BASE_IMAGE }}
         GOOSE_VERSION={{ APP_VERSION }} CONFIGURE=false bash
 
     # Install dev tools
-    dnf install -y jq libxcb
+    dnf install -y jq libxcb perf strace
 
     # Install Go
     curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
