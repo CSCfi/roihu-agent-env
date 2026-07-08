@@ -31,6 +31,13 @@
     },
     "permission": {
         "*": "ask",
-        "slurm_*": "allow"
+        "slurm_*": "allow",
+        "ls": "allow",
+        "echo": "allow",
+        "grep": "allow",
+        "cd": "allow",
+        "cat": "allow",
+        "which": "allow",
+        "/opts/docs/*": "allow"
     }
 }
