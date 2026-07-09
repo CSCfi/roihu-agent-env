@@ -113,9 +113,7 @@ goose_roihu_init() {
     $( mkdir -p ~/.config/goose )
     for file in "${FILES[@]}"
     do
-        # Strip file paths
-        local fname=${file##*/}
-        $( cp "$file" ~/.config/goose/"$fname" )
+        $( cp -r "$file" ~/.config/goose )
     done
     return 0
 }

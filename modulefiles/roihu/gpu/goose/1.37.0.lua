@@ -45,7 +45,7 @@ setenv("AGENT_IMAGE", pathJoin(root, "images/goose-gpu-1.37.0.sif"))
 
 -- Specify default configuration location.
 -- TODO: Make this an absolute path later.
-local init_files = {"config/goose/config.yaml", "config/goose/.goosehints", "config/AGENTS.md"}
+local init_files = {"config/goose/config.yaml", "config/goose/.goosehints", "config/AGENTS.md", "config/goose/custom_providers"}
 local init_filepaths = ""
 for key,file in pairs(init_files) do
     init_filepaths = init_filepaths .. " " .. pathJoin(root, file)
