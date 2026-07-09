@@ -30,8 +30,8 @@ goose
 
 I recommend setting an alias for the commands, for example for running opencode on a cpu node, copy the following to your ~/.bashrc.
 ```bash
-alias opencode_cpu="ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu \
-ml opencode \
+alias opencode_cpu="ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu &&\
+ml opencode &&\
 opencode"
 ```
 
