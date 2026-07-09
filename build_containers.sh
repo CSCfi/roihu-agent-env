@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 TARGET_CONTAINERS=("opencode" "goose")
 TARGET_VERSIONS=("1.17.0" "1.37.0")

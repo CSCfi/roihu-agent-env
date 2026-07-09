@@ -5,6 +5,8 @@
 # Wrapper script for running OpenCode in a container.
 #
 
+set -euo pipefail
+
 ## TODO check if this is necessary
 #if [[ $( hostname ) == *"login"* ]]; then
 #    echo "ERROR: Do not run AI agents on the login node."
