@@ -1,0 +1,18 @@
+user:
+  always_allow:
+  - extensionmanager__list_resources
+  - delegate
+  - slurm__sinfo
+  - slurm__my_jobs
+  - slurm__slurm_config
+  - slurm__batch_script
+  - slurm__reservations
+  - load
+  - load_skill
+  - tree
+  - read
+  - todo__todo_write
+  ask_before:
+  - edit
+  - shell
+  never_allow: []
