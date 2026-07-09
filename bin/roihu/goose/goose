@@ -7,6 +7,8 @@
 
 set -euo pipefail
 
+# NOTE: set -u causes unbound variables to throw errors, set default values to arguments with ${1:-<val>}
+
 ## TODO check if this is necessary
 #if [[ $( hostname ) == *"login"* ]]; then
 #    echo "ERROR: Do not run AI agents on the login node."
@@ -120,8 +122,8 @@ goose_roihu_init() {
     return 0
 }
 
-if [ "$1" = "roihu-init" ]; then
-    goose_roihu_init "$2"
+if [ "${1:-}" = "roihu-init" ]; then
+    goose_roihu_init "${2:-}"
 elif [ -e ~/.config/goose/config.yaml ]; then
     run_goose "$@"
 else
