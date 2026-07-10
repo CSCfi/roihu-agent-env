@@ -36,8 +36,9 @@ else
     git -C "$DOCS_DIR" sparse-checkout set "$DOCS_SUBFOLDER"
     git -C "$DOCS_DIR" checkout
 fi
-# Remove all non md files and the .git directory, as that's how we check if the docs exist above.
-find docs -type f -not \( -name '*.md' -o -name '.git' \) -delete
+# Remove all non-md files but keep the .git directory intact, as that's how we
+# check whether the docs already exist above.
+find docs -type f -not -path 'docs/.git/*' -not -name '*.md' -print -delete
 
 # Build socket bridge binary
 # cd socket-bridge

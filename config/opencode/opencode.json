@@ -38,6 +38,8 @@
         "cd": "allow",
         "cat": "allow",
         "which": "allow",
-        "/opts/docs/*": "allow"
+        "external_directory": {
+            "/opt/docs/*": "allow"
+        }
     }
 }

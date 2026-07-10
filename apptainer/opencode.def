@@ -14,7 +14,7 @@ From: {{ BASE_IMAGE }}
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}
     config/AGENTS.md {{ OPENCODE_CONFIG_DIR }}/
     socket-bridge/socket-bridge /opt/socket-bridge
-    docs/docs /opt/docs/
+    docs/docs /opt
 
 %post
     export DEBIAN_FRONTEND=noninteractive

@@ -12,9 +12,7 @@ to tell the user how to load and use it instead of installing it themselves.
 
 ## Where the docs are
 
-- Inside the agent container: `/opt/docs/apps`
-
-Use whichever exists. Files are named in lowercase kebab-case with a `.md`
+Inside the agent container: `/opt/docs/apps` Files are named in lowercase kebab-case with a `.md`
 extension, e.g. `pytorch.md`, `python.md`, `r-env.md`, `alphafold.md`, `qe.md`.
 There is also an `index.md` listing the applications — ignore it as a match.
 
@@ -39,7 +37,7 @@ There is also an `index.md` listing the applications — ignore it as a match.
    - **Found:** state that the software is available on Roihu, then print the
      matching page (`cat /opt/docs/apps/<name>.md`) and summarize how to access
      it (module to load, example usage). Tell the user they can find the documentation at
-     `https://docs.csc.fi/apps/<name>`
+     the address `https://docs.csc.fi/apps/<name>`.
    - **Not sure / conflicting information / multiple candidates:** list the close matches and ask the user
      which one they mean, or briefly summarize each.
    - **Not found:** tell the user there is no documentation page for it, so it is
