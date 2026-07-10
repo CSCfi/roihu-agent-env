@@ -11,6 +11,22 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 - An `opencode.json` adds the Slurm MCP-server and configuration for [Aitta](https://aitta.csc.fi) use.
 
 ## Usage
+### Agent environment
+The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, containers for the open-source agents [Opencode](https://opencode.ai) and [Goose](https://goose-docs.ai). The containers come with a AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
+
+**Must** **read:**
+* The user is always responsible for the actions of their AI agents. Any command executed by an agent is run under your personal account.
+* Data privacy: OpenCode uses the third-party OpenCode Zen model endpoint by default, which is hosted by Anomaly Innovations Inc., the company that maintains OpenCode. If you use models from this endpoint, be aware that any data that you enter or is read from your working directory will be sent to the company hosting the endpoint. Consider configuring OpenCode to use a different endpoint, for example a custom endpoint. Instructions for this are listed below.
+* Data security: Your current working directory (```$PWD```) and any subdirectories are accessible inside the environment. Your home directory is not accessible, with the exception of certain directories, where OpenCode looks for configuration files and stores data.
+* Tool use: The default configuration file included for both Goose and Opencode gives permission for the agent to use read-only tools, and the Slurm-MCP server without permission.
+
+If you wish OpenCode to have access to directories that are not under your current working directory, you can bind mount them by appending them to the APPTAINER_BIND environment variable.
+```bash
+# Bind mount additional directories (optional)
+export APPTAINER_BIND=$APPTAINER_BIND,/path/to/dir1,/path/to/dir2
+```
+For more information, see the [apptainer documentation](https://apptainer.org/user-docs/master/index.html).
+
 ### Workflow
 1. You can use the agent in a Roihu terminal window by running the commands below.
 ```bash
@@ -25,17 +41,17 @@ opencode
 # or
 goose
 ```
-2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run the same commands as in option 1 in your VSCode terminal.
-3. If you prefer the Roihu Web Interface VSCode, you only need to open a terminal window and run the commands in it.
+2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the extensions [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run the same commands as in option 1 in your VSCode terminal.
+3. If you prefer the Roihu Web Interface VSCode, you only need to open a VSCode terminal window and run the commands in it.
 
-I recommend setting an alias for the commands, for example for running opencode on a cpu node, copy the following to your ~/.bashrc.
+I recommend setting an alias for the commands, for example, for running opencode on a cpu node, copy the following to your ~/.bashrc.
 ```bash
 alias opencode_cpu="ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu &&\
 ml opencode &&\
 opencode"
 ```
 
-### Inference providers
+### AI endpoint providers
 
 > [!WARNING]
 > If you use the Opencode Zen provider (the default), all of your data will be sent to the company behind Opencode and used for training.
@@ -76,4 +92,10 @@ If your API key changes often, you can leave that field out of the config, and w
 
 For Goose, if you are using Aitta, you save the Api key from [this](https://aitta-auth.csc.fi/myToken) link to the environment variable AITTA_KEY. Then run Goose.
 
-For other providers, you load the environment module and run goose configure. Follow the prompts, and consult the [instructions](https://goose-docs.ai/docs/getting-started/providers/#configure-provider-and-model). The configuration will automatically be saved for you.
+For other providers, you load the environment module and run goose configure. Follow the prompts, and consult the [instructions](https://goose-docs.ai/docs/getting-started/providers/#configure-provider-and-model). The configuration will automatically be saved for you. Additionally, you are free to create and edit the configuration files that can be found at ~/.config/goose by default.
+
+### MCP Server
+
+The agents are by default configured to have access to a Slurm MCP server, which lets the agent access certain (read-only) Slurm commands safely. Up-to-date information about the server, including which commands are available, can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/slurm-mcp).
+
+A MCP server for reading documentation is WIP.
