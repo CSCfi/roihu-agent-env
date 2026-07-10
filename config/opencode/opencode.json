@@ -40,6 +40,9 @@
         "which": "allow",
         "external_directory": {
             "/opt/docs/*": "allow"
+        },
+        "skill": {
+            "check-roihu-installation": "allow"
         }
     }
 }
