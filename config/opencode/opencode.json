@@ -31,13 +31,17 @@
     },
     "permission": {
         "*": "ask",
+        "read": "allow",
         "slurm_*": "allow",
-        "ls": "allow",
-        "echo": "allow",
-        "grep": "allow",
-        "cd": "allow",
-        "cat": "allow",
-        "which": "allow",
+        "bash": {
+            "*": "ask",
+            "ls *": "allow",
+            "echo *": "allow",
+            "grep *": "allow",
+            "cd *": "allow",
+            "cat *": "allow",
+            "which *": "allow"
+        },
         "external_directory": {
             "/opt/docs/*": "allow"
         },
