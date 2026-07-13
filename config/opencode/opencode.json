@@ -13,7 +13,7 @@
                     "name": "Qwen/Qwen3-Coder-Next",
                     "options": {
                         "reasoningEffort": "high",
-                        "textVerbosity": "low"
+                        "textVerbosity": "medium"
                     }
                 },
                 "google/gemma-4-31b-it": {}
@@ -33,6 +33,7 @@
         "*": "ask",
         "read": "allow",
         "slurm_*": "allow",
+        "grep *": "allow",
         "bash": {
             "*": "ask",
             "ls *": "allow",
@@ -40,7 +41,8 @@
             "grep *": "allow",
             "cd *": "allow",
             "cat *": "allow",
-            "which *": "allow"
+            "which *": "allow",
+            "head *": "allow"
         },
         "external_directory": {
             "/opt/docs/*": "allow"

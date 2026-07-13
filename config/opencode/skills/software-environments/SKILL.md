@@ -1,5 +1,5 @@
 ---
-name: roihu-installation-help
+name: software-environments
 description: check whether software is available on Roihu, explain how to load/use it, and guide installation from the docs if it isn't. Use when user wants to install, compile, use software, or asks if something is available. 
 ---
 
@@ -12,7 +12,9 @@ to tell the user how to load and use it. If the application isn't already availa
 to guide the user in the installation.
 
 ## Where the docs are
-
+- For the user: The user cannot see the docs easily. *Always* when referencing the documentation refer
+  to the website https://csc.docs.fi/<path>. The local docs structure maps with the website, with /opt/docs
+  mapping to the https://csc.docs.fi address. For example, /opt/docs/apps/pytorch.md -> https://csc.docs.fi/apps/pytorch.
 - Application-pages: Inside the agent container: `/opt/docs/apps` Files are named in lowercase kebab-case with a `.md`
    extension, e.g. `pytorch.md`, `python.md`, `r-env.md`, `alphafold.md`, `qe.md`.
 - There is also an `index.md` listing the applications — ignore it as a match.
