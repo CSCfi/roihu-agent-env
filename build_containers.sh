@@ -64,4 +64,5 @@ for (( i=0; i<${#TARGET_CONTAINERS[@]}; i++ )); do
 done
 chgrp -R project_2001659 images
 chgrp -R project_2001659 bin
+chgrp -R project_2001659 config/opencode/skills
 cd $OLD_DIR
