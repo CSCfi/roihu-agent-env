@@ -4,7 +4,7 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 
 ## Contents
 
-- Apptainer definition files for installing [OpenCode](https://opencode.ai/docs) and [Goose](https://goose-docs.ai/) inside a container.
+- Apptainer definition files for installing [OpenCode](https://opencode.ai/docs) inside a container.
 - Script `build_containers.sh` for building the images on Roihu.
 - Module files and wrapper scripts for defining which directories to mount inside the container.
 - An `AGENTS.md` file for Roihu adapted from the LAIFS one.
@@ -12,7 +12,7 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 
 ## Usage
 ### Agent environment
-The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, containers for the open-source agents [Opencode](https://opencode.ai) and [Goose](https://goose-docs.ai). The containers come with a AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
+The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, container for the open-source agents [Opencode](https://opencode.ai). The container comes with an AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
 
 **Must** **read:**
 * The user is always responsible for the actions of their AI agents. Any command executed by an agent is run under your personal account.
@@ -33,13 +33,9 @@ For more information, see the [apptainer documentation](https://apptainer.org/us
 # Load environment module, use either cpu or gpu depending on your current node.
 ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu>
 ml opencode
-# or
-ml goose
 
 # Start agent
 opencode
-# or
-goose
 ```
 2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the extensions [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run you can install the Opencode extension and use it in the sidebar. You still need to activate the module with the commands `ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu> && ml opencode` before using the extension.
 3. If you prefer the Roihu Web Interface VSCode, you only need to open a VSCode terminal window and run the commands in it.
@@ -89,8 +85,6 @@ Here is an example config:
 }
 ```
 If your API key changes often, you can leave that field out of the config, and when starting Opencode type /connect, choose your provider, and paste your key.
-
-For Goose, if you are using Aitta, you save the Api key from [this](https://aitta-auth.csc.fi/myToken) link to the environment variable AITTA_KEY. Then run Goose.
 
 For other providers, you load the environment module and run goose configure. Follow the prompts, and consult the [instructions](https://goose-docs.ai/docs/getting-started/providers/#configure-provider-and-model). The configuration will automatically be saved for you. Additionally, you are free to create and edit the configuration files that can be found at ~/.config/goose by default.
 
