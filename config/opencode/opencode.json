@@ -48,7 +48,9 @@
             "/opt/docs/*": "allow"
         },
         "skill": {
-            "check-roihu-installation": "allow"
+            "*": "ask",
+            "software-environments": "allow",
+            "batch-scripts": "allow"
         }
     }
 }
