@@ -29,6 +29,9 @@
             "enabled": true
         }
     },
+    "skills": {
+        "paths": ["/opt/opencode/skills"]
+    },
     "permission": {
         "*": "ask",
         "read": "allow",

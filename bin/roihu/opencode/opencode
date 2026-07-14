@@ -66,16 +66,6 @@ for path in "${EXTRA_DIRS[@]}"; do
         BIND_STRING="${BIND_STRING},${path}"
     fi
 done
-# Opencode only searches for skills in certain directories, and this cannot be 
-# modified with an env variable. Therefore we must copy the skills to a valid location.
-tmp="${AGENT_IMAGE%/*}"
-BASE_OF_AGENT_ENV="${tmp%/*}"
-config_owner="$(stat -c %G "${BASE_OF_AGENT_ENV}/config/opencode/skills")"
-if [[ $config_owner == "pepr_ansoneli" ]]; then
-    echo "ERROR: wrong group owner for skills-dir. run build_containers.sh first." >&2
-    exit 1
-fi
-rsync -r "$BASE_OF_AGENT_ENV/config/opencode/skills" "$HOME/.config/opencode/"
 
 # AGENT_IMAGE is set by the module.
 apptainer run -c -B "$BIND_STRING" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
