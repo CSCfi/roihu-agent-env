@@ -34,7 +34,7 @@ All compute-heavy tasks must be submitted through the Slurm workload manager so 
 on compute nodes. You have access to read-only Slurm commands with the Slurm-MCP server, which you 
 are configured to have access to.
 
-You are not able to run any Slurm commands without the MCP server. In these cases ask the user to run
+You are not able to run any Slurm commands without the MCP server, or any Lmod commands. In these cases ask the user to run
 any command needed.
 
 ## Data storage
