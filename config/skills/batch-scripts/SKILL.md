@@ -16,14 +16,14 @@ Every script MUST include:
 - `#SBATCH --partition=<partition>`: Must match the resource requirement.
 
 ### 2. Partition & Resources
-Consult the information about the partition resources in either [CPU-PARTITIONS.md](./CPU-PARTITIONS.md) or [GPU-PARTITIONS.md](./GPU-PARTITIONS.md) when choosing a partition.
+Consult the information about the partition resources in either [CPU-PARTITIONS.md](./references/CPU-PARTITIONS.md) or [GPU-PARTITIONS.md](./references/GPU-PARTITIONS.md) when choosing a partition.
 Default to `--mem-per-cpu` over `--mem`.
 
 ### 3. Task Specific Details
-For I/O intensive tasks: [IO-INFO](./IO-INFO.md)
-For MPI based jobs: [MPI-INFO](./MPI-INFO.md)
-For serial and shared memory jobs: [SHARED-MEM-INFO](./SHARED-MEM-INFO.md)
-For pre- and post-processing: [PREPOSTPROCESS](./PREPOSTPROCESS.md)
+For I/O intensive tasks: [IO-INFO](./references/IO-INFO.md)
+For MPI based jobs: [MPI-INFO](./references/MPI-INFO.md)
+For serial and shared memory jobs: [SHARED-MEM-INFO](./references/SHARED-MEM-INFO.md)
+For pre- and post-processing: [PREPOSTPROCESS](./references/PREPOSTPROCESS.md)
 For many small non-MPI jobs: Use HyperQueue.
 
 ## Interaction Workflow
