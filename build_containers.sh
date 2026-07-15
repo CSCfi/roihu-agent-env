@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-TARGET_CONTAINERS=("opencode")
-TARGET_VERSIONS=("1.17.0" "1.37.0")
+TARGET_CONTAINERS=("opencode" "opencode")
+TARGET_VERSIONS=("1.17.0" "1.18.1")
 
 
 # Parses if we are on roihu-cpu or roihu-gpu.
