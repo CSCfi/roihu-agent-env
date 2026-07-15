@@ -9,14 +9,8 @@
                 "apiKey": "{env:AITTA_KEY}"
             },
             "models": {
-                "Qwen/Qwen3-Coder-Next": {
-                    "name": "Qwen/Qwen3-Coder-Next",
-                    "options": {
-                        "reasoningEffort": "high",
-                        "textVerbosity": "medium"
-                    }
-                },
-                "google/gemma-4-31b-it": {}
+                "google/gemma-4-31b-it": {},
+                "openai/gpt-oss-120b": {}
             }
         }
     },
@@ -48,7 +42,8 @@
             "head *": "allow"
         },
         "external_directory": {
-            "/opt/docs/*": "allow"
+            "/opt/docs/*": "allow",
+            "/opt/opencode/skills/*": "allow"
         },
         "skill": {
             "*": "ask",

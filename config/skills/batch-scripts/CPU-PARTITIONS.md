@@ -11,3 +11,5 @@
 | `hugemem_longrun`  | 10 days      | 1     | 128/job    | 6037 GiB/job   | XL; long high-memory jobs      |
 
 On full nodes, make sure the `ntasks-per-node × cpus-per-task` equal the Max CPUs of the nodes.
+Do not request GPUs on CPU nodes.
+Do not request full nodes on shared partitions.
