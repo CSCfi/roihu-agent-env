@@ -56,5 +56,5 @@ From: {{ BASE_IMAGE }}
 %test
     HOME="$(mktemp -d)" opencode debug info
 %runscript
-    . /opt/activate.sh
+    . /opt/activate.sh  > /dev/null 2>&1
     opencode "$@"
