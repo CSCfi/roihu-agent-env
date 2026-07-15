@@ -1,4 +1,5 @@
 # MPI Based Jobs
+*Always* use `srun` instead of `mpirun/mpiexec`.
 When running jobs on a partial node, set the number of MPI tasks with:
 ```bash
 #SBATCH --partition=small

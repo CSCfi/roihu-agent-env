@@ -1,6 +1,6 @@
 ---
 name: batch-scripts
-description: Assist user with creating and optimizing batch job scripts. Use when user asks you to create or assist with their slurm batch job script.
+description: Assist user with creating and optimizing batch job scripts. Use when user asks you to create, optimize or debug their slurm batch job script.
 ---
 
 # Batch Script Helper
@@ -16,14 +16,17 @@ Every script MUST include:
 - `#SBATCH --partition=<partition>`: Must match the resource requirement.
 
 ### 2. Partition & Resources
-Consult the information about the partition resources in either [CPU-PARTITIONS.md](./CPU-PARTITIONS.md) or [GPU-PARTITIONS.md][./GPU-PARTITIONS.md] when choosing a partition.
+Consult the information about the partition resources in either [CPU-PARTITIONS.md](./CPU-PARTITIONS.md) or [GPU-PARTITIONS.md](./GPU-PARTITIONS.md) when choosing a partition.
 Default to `--mem-per-cpu` over `--mem`.
 
-### 3. Performance & Optimization
-For I/O intensive tasks, [IO-INFO](./IO-INFO.md)
+### 3. Task Specific Details
+For I/O intensive tasks: [IO-INFO](./IO-INFO.md)
 For MPI based jobs: [MPI-INFO](./MPI-INFO.md)
+For serial and shared memory jobs: [SHARED-MEM-INFO](./SHARED-MEM-INFO.md)
+For pre- and post-processing: [PREPOSTPROCESS](./PREPOSTPROCESS.md)
+For many small non-MPI jobs: Use HyperQueue.
 
 ## Interaction Workflow
 1. **Gather Requirements:** Ask for the project ID, expected runtime, software/modules needed, etc.
-2. **Configure resources** Choose the correct partition and resources with the exact use-case and performance in mind.
+2. **Configure resources** Choose the correct partition and resources with the task specific details in mind.
 3. **Draft Script:** Provide a complete, ready-to-use Bash script with clear comments explaining the resource choices.

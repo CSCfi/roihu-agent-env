@@ -1,7 +1,7 @@
 # I/O Intensive applications
 
 All nodes have fast local storage available. It can be accessed with the $TMPDIR environment variable.
-`small`, `interactive` partitions have 20 GiB quota, `medium`, `large` have 600 GiB, and GPU nodes have 150 GiB.
+`small` partition has 20 GiB quota, `medium`, `large` have 600 GiB, and GPU nodes have 150 GiB.
 Additional fast storage can be requested with:
 ```bash
 #SBATCH --exclusive
