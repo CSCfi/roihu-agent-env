@@ -57,8 +57,10 @@ To use Opencode with Aitta, you should get your API key from [here](https://aitt
 export AITTA_KEY=<YOUR_KEY_HERE>
 ```
 
-If you have a different API you want to use with Opencode, you can add it by  creating a config at ~/.config/opencode.json or your project folder and following the [instructions](https://opencode.ai/docs/providers) by Opencode.
+If you have a different API you want to use with Opencode, you can add it by  creating a config at ~/.config/opencode/opencode.json or your project folder and following the [instructions](https://opencode.ai/docs/providers) by Opencode.
 
+> [!NOTE]
+> The model names are case-sensitive!
 Here is an example config:
 ```json
 {
