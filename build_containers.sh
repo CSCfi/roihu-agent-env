@@ -11,8 +11,10 @@ TARGET_VERSIONS=("1.17.0" "1.18.1")
 NODE_TYPE=$( hostname | cut -d "-" -f 2 )
 if [[ $NODE_TYPE == "gpu" ]]; then
     BASE_IMAGE="satama.csc.fi/r_installation_spack/core-gpu-gcc-14.3.0-cuda-12.9.1@sha256:96f99061fb4d21360dc89c5d1269397f85a6ad86f09479f08e07ed27b7c98311"
+    SOCKET_BRIDGE_FILE="socket-bridge-gpu"
 else
     BASE_IMAGE="satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5"
+    SOCKET_BRIDGE_FILE="socket-bridge"
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -59,7 +61,8 @@ mkdir -p images
 for (( i=0; i<${#TARGET_CONTAINERS[@]}; i++ )); do
     CONTAINER=${TARGET_CONTAINERS[i]}
     VERSION=${TARGET_VERSIONS[i]}
-    apptainer build --fakeroot --fix-perms --writable-tmpfs --force --build-arg "APP_VERSION=$VERSION" --build-arg "BASE_IMAGE=$BASE_IMAGE" \
+    apptainer build --fakeroot --fix-perms --writable-tmpfs --force --build-arg "APP_VERSION=$VERSION" --build-arg "BASE_IMAGE=$BASE_IMAGE"\
+        --build-arg "SOCKET_BRIDGE_FILE=$SOCKET_BRIDGE_FILE"\
         images/${CONTAINER}-${NODE_TYPE}-${VERSION}.sif apptainer/${CONTAINER}.def
 done
 chgrp -R project_2001659 images
