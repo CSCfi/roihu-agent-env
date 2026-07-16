@@ -5,7 +5,7 @@ description: Assist user with creating and optimizing batch job scripts. Use whe
 
 # Batch Script Helper
 
-Use the documentation at `/opt/docs`, the information in this skill, and the real cluster config and partition information from the Slurm MCP if unsure.
+Use the documentation at `/opt/docs`, the information in this skill, and the real cluster config and partition information from the Slurm MCP.
 If the user is asking for help with a past job, fetch the batch script using the Slurm MCP server.
 
 ## Key Directives & Best Practices
@@ -20,11 +20,12 @@ Consult the information about the partition resources in either [CPU-PARTITIONS.
 Default to `--mem-per-cpu` over `--mem`.
 
 ### 3. Task Specific Details
-For I/O intensive tasks: [IO-INFO](./references/IO-INFO.md)
-For MPI based jobs: [MPI-INFO](./references/MPI-INFO.md)
-For serial and shared memory jobs: [SHARED-MEM-INFO](./references/SHARED-MEM-INFO.md)
-For pre- and post-processing: [PREPOSTPROCESS](./references/PREPOSTPROCESS.md)
-For many small non-MPI jobs: Use HyperQueue.
+Before drafting, identify which of these apply and READ the matching file first:
+I/O intensive tasks: [IO-INFO](./references/IO-INFO.md)
+MPI based jobs: [MPI-INFO](./references/MPI-INFO.md)
+Serial and shared memory jobs: [SHARED-MEM-INFO](./references/SHARED-MEM-INFO.md)
+Pre- and post-processing steps: [PREPOSTPROCESS](./references/PREPOSTPROCESS.md)
+Many small non-MPI jobs: Use HyperQueue.
 
 ## Interaction Workflow
 1. **Gather Requirements:** Ask for the project ID, expected runtime, software/modules needed, etc.
