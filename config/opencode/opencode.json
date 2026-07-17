@@ -39,14 +39,17 @@
             "cd *": "allow",
             "cat *": "allow",
             "which *": "allow",
-            "head *": "allow"
+            "head *": "allow",
+            "python3 /opt/opencode/skills/job-efficiency/scripts/*": "allow"
         },
         "external_directory": {
+            "*": "ask",
             "/opt/docs/*": "allow",
             "/opt/opencode/skills/*": "allow"
         },
         "skill": {
             "*": "ask",
+            "job-efficiency": "allow",
             "software-environments": "allow",
             "batch-scripts": "allow"
         }

@@ -44,6 +44,12 @@ From: {{ BASE_IMAGE }}
     tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
     rm go1.26.4.linux-amd64.tar.gz
 
+    # Install the job-monitoring python sdk, for the job-efficiency skill.
+    git clone ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitoring/job-monitoring-sdk.git
+    cd job-monitoring-sdk
+    pip install ./
+    pip install pandas
+
 %environment
     export PATH=$PATH:/usr/local/go/bin
     export PATH={{ OPENCODE_INSTALL_DIR }}:$PATH

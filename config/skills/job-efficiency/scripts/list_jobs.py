@@ -12,4 +12,4 @@ df_reduced = df.loc[: , ["jobidraw", "partition", "host", 'mem_avg', 'mem_max', 
                           'cpu_avg_busy','gpu_avg_load', 'gpu_avg_mem_load'
 ]]
 # Print the last three jobs efficiency data. 
-print(df.to_string)
+print(df.to_string())
