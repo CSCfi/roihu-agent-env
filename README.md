@@ -39,6 +39,15 @@ opencode
 ```
 2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the extensions [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run you can install the Opencode extension and use it in the sidebar. You still need to activate the module with the commands `ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu> && ml opencode` before using the extension.
 3. If you prefer the Roihu Web Interface VSCode, you only need to open a VSCode terminal window and run the commands in it.
+4. You can use the agent in Zed by navigating to 'Settings' > 'AI' > 'Terminal Thread Init Command' and adding `ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu && ml opencode && opencode` line to the field. Or add the following to your ~/.config/zed/config.json:
+```json
+{
+  "agent": {
+    "terminal_init_command": "ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu> && ml opencode && opencode"
+  }
+}
+```
+To start a new agent thread, click the '+' in the Agent Panel (left edge by default), choose your workspace, and a new terminal should appear with Opencode running. To create another thread, repeat the steps.
 
 I recommend setting an alias for the commands, for example, for running opencode on a cpu node, copy the following to your ~/.bashrc.
 ```bash
