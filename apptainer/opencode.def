@@ -18,8 +18,10 @@ From: {{ BASE_IMAGE }}
     config/skills {{ OPENCODE_SKILL_DIR }}
     socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
     docs/docs /opt
+    job-monitoring-sdk /opt/job-monitoring-sdk
 
 %post
+
     export DEBIAN_FRONTEND=noninteractive
     export OPENCODE_INSTALL_DIR={{ OPENCODE_INSTALL_DIR }}
 
@@ -44,9 +46,9 @@ From: {{ BASE_IMAGE }}
     tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
     rm go1.26.4.linux-amd64.tar.gz
 
-    # Install the job-monitoring python sdk, for the job-efficiency skill.
-    git clone ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitoring/job-monitoring-sdk.git
-    cd job-monitoring-sdk
+    dnf install -y python3-pip    
+    # Install the job-monitoring python sdk, for the job-efficiency skill. https://gitlab.ci.csc.fi/compen/job-monitoring/job-monitoring-sdk.git
+    cd /opt/job-monitoring-sdk
     pip install ./
     pip install pandas
 

@@ -1,4 +1,4 @@
-from jobmon_sdk.jobs import JobMetrics
+from jobmon_sdk.metrics import JobMetrics
 import pandas as pd
 import os
 import sys
