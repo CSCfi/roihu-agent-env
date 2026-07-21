@@ -41,6 +41,10 @@ From: {{ BASE_IMAGE }}
     # Install dev tools
     dnf install -y jq perf strace
 
+    # Install ripgrep
+    # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
+    dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/r/ripgrep-14.1.1-1.el9.x86_64.rpm
+
     # Install Go
     curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
     tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
