@@ -104,3 +104,15 @@ For other providers, you load the environment module and run goose configure. Fo
 The agents are by default configured to have access to a Slurm MCP server, which lets the agent access certain (read-only) Slurm commands safely. Up-to-date information about the server, including which commands are available, can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/slurm-mcp).
 
 A MCP server for reading documentation is WIP.
+
+## Potential issues
+
+Opencode uses git to create snapshots of file changes during sessions. In most cases this is desirable, but it can cause heavy filesystem load if you run opencode in a directory with large number of files which aren't gitignored. In these cases disable snapshots in config:
+
+```json
+{
+    "$schema": "https://opencode.ai/config.json",
+    ...
+    "snapshots": false
+}
+```
