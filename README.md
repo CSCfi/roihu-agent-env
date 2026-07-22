@@ -107,6 +107,7 @@ A MCP server for reading documentation is WIP.
 
 ## Potential issues
 
+### Excessive snapshots
 Opencode uses git to create snapshots of file changes during sessions. In most cases this is desirable, but it can cause heavy filesystem load if you run opencode in a directory with large number of files which aren't gitignored. In these cases disable snapshots in config:
 
 ```json
@@ -116,3 +117,7 @@ Opencode uses git to create snapshots of file changes during sessions. In most c
     "snapshots": false
 }
 ```
+
+### Errors when switching between versions
+
+If you have switched between different Opencode versions and the TUI no longer starts up, this is likely caused by your session database being incompatible with the newer version. Removing your previous sessions fixes the issue. Session database should be located at `~/.local/share/<x86_64 or aarch64>/opencode/opencode.db`.
