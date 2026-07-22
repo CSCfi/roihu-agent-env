@@ -40,7 +40,14 @@
             "cat *": "allow",
             "which *": "allow",
             "head *": "allow",
-            "python3 /opt/opencode/skills/job-efficiency/scripts/*": "allow"
+            "python3 /opt/opencode/skills/job-efficiency/scripts/*": "allow",
+            "seff *": "deny",
+            "sacct *": "deny",
+            "sbatch *": "deny",
+            "squeue *": "deny",
+            "scontrol *": "deny",
+            "sinfo *": "deny",
+            "srun": "deny"
         },
         "external_directory": {
             "*": "ask",

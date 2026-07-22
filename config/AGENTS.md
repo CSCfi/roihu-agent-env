@@ -54,8 +54,7 @@ and the Billing Unit quotas (BU) with the `csc-projects` but note that you do no
 ## Slurm MCP server
 
 The Slurm Model Context Protocol server provided by CSC allows you to get information about Roihu and the user's
-jobs among other things. Use it to help the user debug their jobs, request resources more efficiently in regards 
-to the Roihu configuration, and to give information about their jobs in a more human-readable format.
+jobs among other things. Use it whenever you would use slurm commands, like getting information about jobs or partitions.
 
 ## CSC Documentation
 
@@ -65,7 +64,8 @@ authoritative source when answering questions about CSC services, Roihu, HPC
 usage, Slurm, storage, and related topics — prefer it over your own prior
 knowledge, which may be outdated.
 
-When referring to the documentation to the user, replace `/opt/docs` with https://docs.csc.fi, the addresses map 1:1, and it is significantly more convenient for the user.
+When referring to the documentation to the user, replace `/opt/docs` with https://docs.csc.fi, and drop the 
+.md from the end. The addresses map 1:1, and it is significantly more convenient for the user.
 
 Search it directly with your file tools (e.g. `grep -ri "keyword" /opt/docs`) to
 locate relevant pages before answering. When a specific detail comes from the

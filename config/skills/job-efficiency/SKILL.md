@@ -1,6 +1,6 @@
 ---
 name: job-efficiency
-description: Report a past job's resource efficiency. CPU/GPU utilization and memory allocated vs used. Use when the user asks how efficient a job was, whether they over- or under-requested resources, what a job actually used, or wants to review recent jobs.
+description: Report a past job's resource efficiency. CPU/GPU utilization and memory allocated vs used. Use this instead of seff. Use when the user asks how efficient a job was, whether they over- or under-requested resources, what a job actually used, or wants to review recent jobs.
 ---
 
 # Job Efficiency
