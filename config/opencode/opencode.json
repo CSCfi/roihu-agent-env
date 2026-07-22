@@ -30,6 +30,7 @@
         "*": "ask",
         "read": "allow",
         "slurm_*": "allow",
+        "todowrite": "allow",
         "grep *": "allow",
         "bash": {
             "*": "ask",
@@ -40,6 +41,7 @@
             "cat *": "allow",
             "which *": "allow",
             "head *": "allow",
+            "tail *": "allow",
             "python3 /opt/opencode/skills/job-efficiency/scripts/*": "allow",
             "seff *": "deny",
             "sacct *": "deny",

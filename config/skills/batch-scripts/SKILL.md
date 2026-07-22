@@ -6,7 +6,7 @@ description: Assist user with creating and optimizing batch job scripts. Use whe
 # Batch Script Helper
 
 Use the documentation at `/opt/docs`, the information in this skill, and the real cluster config and partition information from the Slurm MCP.
-If the user is asking for help with a past job, fetch the batch script using the Slurm MCP server.
+If the user is asking for help with a past job, fetch the batch script using the slurm_batch_script tool.
 
 ## Key Directives & Best Practices
 
@@ -31,3 +31,4 @@ Many small non-MPI jobs: Use HyperQueue.
 1. **Gather Requirements:** Ask for the project ID, expected runtime, software/modules needed, etc.
 2. **Configure resources** Choose the correct partition and resources with the task specific details in mind.
 3. **Draft Script:** Provide a complete, ready-to-use Bash script with clear comments explaining the resource choices.
+4. **Suggest test submission** Suggest the user to use `sbatch --test-only <job-script>` to see if their script is valid.

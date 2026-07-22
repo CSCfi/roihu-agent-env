@@ -66,10 +66,11 @@ To use Opencode with Aitta, you should get your API key from [here](https://aitt
 export AITTA_KEY=<YOUR_KEY_HERE>
 ```
 
-If you have a different API you want to use with Opencode, you can add it by  creating a config at ~/.config/opencode/opencode.json or your project folder and following the [instructions](https://opencode.ai/docs/providers) by Opencode.
+If you have a different API you want to use with Opencode, you can add it by creating a config at ~/.config/opencode/opencode.json or your project folder and following the [instructions](https://opencode.ai/docs/providers) by Opencode.
 
 > [!NOTE]
 > The model names are case-sensitive!
+
 Here is an example config:
 ```json
 {
@@ -77,7 +78,7 @@ Here is an example config:
     "provider": {
         "your_provider": {
             "npm": "@ai-sdk/openai-compatible",
-            "name": "YourName",
+            "name": "provider_name",
             "options": {
                 "baseURL": "https://enter-your-url/openai/v1",
                 "apiKey": "{env:YOUR_API_KEY}"
@@ -97,10 +98,19 @@ Here is an example config:
 ```
 If your API key changes often, you can leave that field out of the config, and when starting Opencode type /connect, choose your provider, and paste your key.
 
-For other providers, you load the environment module and run goose configure. Follow the prompts, and consult the [instructions](https://goose-docs.ai/docs/getting-started/providers/#configure-provider-and-model). The configuration will automatically be saved for you. Additionally, you are free to create and edit the configuration files that can be found at ~/.config/goose by default.
 
 ### MCP Server
 
 The agents are by default configured to have access to a Slurm MCP server, which lets the agent access certain (read-only) Slurm commands safely. Up-to-date information about the server, including which commands are available, can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/slurm-mcp).
 
 A MCP server for reading documentation is WIP.
+
+### Skills
+
+The agent comes with certain skills to help you with HPC specific tasks. The agent can autonomously use the skills when it sees it necessary, or you can invoke the skill by typing /<skill_name> before your prompt.
+The current list of skills is:
+- Software-environments - Help you with using or installing software on Roihu.
+- Job-efficiency - Enables the agent to check how well your job ran.
+- Batch-scripts - Help with Slurm batch scripts.
+
+You can add your own skills in `~/.config/opencode/skills/`.
