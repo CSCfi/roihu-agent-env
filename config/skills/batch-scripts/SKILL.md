@@ -28,7 +28,7 @@ Pre- and post-processing steps: [PREPOSTPROCESS](./references/PREPOSTPROCESS.md)
 Many small non-MPI jobs: Use HyperQueue.
 
 ## Interaction Workflow
-1. **Gather Requirements:** Ask for the project ID, expected runtime, software/modules needed, etc.
+1. **Gather Requirements:** Ask for the project ID, expected runtime, software/modules needed, etc. If needed, use software-environments skill to check existing modules.
 2. **Configure resources** Choose the correct partition and resources with the task specific details in mind.
 3. **Draft Script:** Provide a complete, ready-to-use Bash script with clear comments explaining the resource choices.
 4. **Suggest test submission** Suggest the user to use `sbatch --test-only <job-script>` to see if their script is valid.
