@@ -42,14 +42,18 @@ From: {{ BASE_IMAGE }}
 
     # Install ripgrep
     # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
-    dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/r/ripgrep-14.1.1-1.el9.x86_64.rpm
-
+    # Check which architecture on and install correct version.
+    if [[ $BASE_IMAGE == *"core-cpu"* ]]; then
+        dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/r/ripgrep-14.1.1-1.el9.x86_64.rpm
+    else
+        dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/aarch64/Packages/r/ripgrep-14.1.1-1.el9.aarch64.rpm
+    fi
     # Install Go
     curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
     tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
     rm go1.26.4.linux-amd64.tar.gz
 
-    dnf install -y python3-pip    
+    dnf install -y python3-pip
     # Install the job-monitoring python sdk, for the job-efficiency skill. https://gitlab.ci.csc.fi/compen/job-monitoring/job-monitoring-sdk.git
     cd /opt/job-monitoring-sdk
     pip install ./
