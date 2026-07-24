@@ -62,3 +62,5 @@ The csc-docs MCP gives you access to the CSC User Guide documentation. Use it as
 authoritative source when answering questions about CSC services, Roihu, HPC
 usage, Slurm, storage, and related topics — prefer it over your own prior
 knowledge, which may be outdated.
+
+When querying, don't form questions, but strings that could plausibly match a page.
