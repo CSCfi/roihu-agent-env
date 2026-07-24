@@ -24,23 +24,23 @@ cd $SCRIPT_DIR
 # Fetch the documentation subfolder from the csc-user-guide repo.
 # First run does a sparse partial clone (only docs/); later runs fetch and
 # reset to upstream, downloading just the changed objects.
-DOCS_REPO="https://github.com/CSCfi/csc-user-guide.git"
-DOCS_BRANCH="master"
-DOCS_SUBFOLDER="docs"
-DOCS_DIR="docs"
+# DOCS_REPO="https://github.com/CSCfi/csc-user-guide.git"
+# DOCS_BRANCH="master"
+# DOCS_SUBFOLDER="docs"
+# DOCS_DIR="docs"
 
-if [[ -d "$DOCS_DIR/.git" ]]; then
-    git -C "$DOCS_DIR" fetch --depth 1 origin "$DOCS_BRANCH"
-    git -C "$DOCS_DIR" reset --hard "origin/$DOCS_BRANCH"
-else
-    git clone --no-checkout --depth 1 --filter=blob:none --branch "$DOCS_BRANCH" \
-        "$DOCS_REPO" "$DOCS_DIR"
-    git -C "$DOCS_DIR" sparse-checkout set "$DOCS_SUBFOLDER"
-    git -C "$DOCS_DIR" checkout
-fi
+# if [[ -d "$DOCS_DIR/.git" ]]; then
+#     git -C "$DOCS_DIR" fetch --depth 1 origin "$DOCS_BRANCH"
+#     git -C "$DOCS_DIR" reset --hard "origin/$DOCS_BRANCH"
+# else
+#     git clone --no-checkout --depth 1 --filter=blob:none --branch "$DOCS_BRANCH" \
+#         "$DOCS_REPO" "$DOCS_DIR"
+#     git -C "$DOCS_DIR" sparse-checkout set "$DOCS_SUBFOLDER"
+#     git -C "$DOCS_DIR" checkout
+# fi
 # Remove all non-md files but keep the .git directory intact, as that's how we
 # check whether the docs already exist above.
-find docs -type f -not -path 'docs/.git/*' -not -name '*.md' -print -delete
+# find docs -type f -not -path 'docs/.git/*' -not -name '*.md' -print -delete
 
 # Build socket bridge binary
 # cd socket-bridge

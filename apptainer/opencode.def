@@ -17,7 +17,6 @@ From: {{ BASE_IMAGE }}
     config/AGENTS.md {{ OPENCODE_CONFIG_DIR }}/
     config/skills {{ OPENCODE_SKILL_DIR }}
     socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
-    docs/docs /opt
     job-monitoring-sdk /opt/job-monitoring-sdk
 
 %post

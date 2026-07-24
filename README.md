@@ -8,7 +8,8 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 - Script `build_containers.sh` for building the images on Roihu.
 - Module files and wrapper scripts for defining which directories to mount inside the container.
 - An `AGENTS.md` file for Roihu adapted from the LAIFS one.
-- An `opencode.json` adds the Slurm MCP-server and configuration for [Aitta](https://aitta.csc.fi) use.
+- An `opencode.json` adds the Slurm MCP-server, CSC User Guide MCP-server, and configuration for [Aitta](https://aitta.csc.fi) use.
+- Skills: batch-scripts, job-efficiency, and software environments. See `config/skills` for details.
 
 ## Usage
 ### Agent environment
@@ -99,11 +100,11 @@ Here is an example config:
 If your API key changes often, you can leave that field out of the config, and when starting Opencode type /connect, choose your provider, and paste your key.
 
 
-### MCP Server
+### MCP Servers
 
 The agents are by default configured to have access to a Slurm MCP server, which lets the agent access certain (read-only) Slurm commands safely. Up-to-date information about the server, including which commands are available, can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/slurm-mcp).
 
-A MCP server for reading documentation is WIP.
+Agents also have access to the CSC User Guide via a csc-docs MCP server, forked from the MCP made by [LAIFS](https://github.com/lumi-ai-factory/laifs-mcp-server). The User Guide version repo can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/docs-mcp-deploy/-/tree/main?ref_type=heads).
 
 ### Skills
 

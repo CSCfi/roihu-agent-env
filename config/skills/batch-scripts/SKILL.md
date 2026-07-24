@@ -5,7 +5,7 @@ description: Assist user with creating and optimizing batch job scripts. Use whe
 
 # Batch Script Helper
 
-Use the documentation at `/opt/docs`, the information in this skill, and the real cluster config and partition information from the Slurm MCP.
+Use the csc-docs MCP, and the real cluster config and partition information from the Slurm MCP.
 If the user is asking for help with a past job, fetch the batch script using the slurm_batch_script tool.
 
 ## Key Directives & Best Practices
