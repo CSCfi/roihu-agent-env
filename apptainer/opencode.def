@@ -38,7 +38,7 @@ From: {{ BASE_IMAGE }}
         bash -s -- --version {{ APP_VERSION }}
 
     # Install dev tools
-    dnf install -y jq perf strace
+    dnf install -y jq perf strace valgrind
 
     # Install ripgrep
     # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
