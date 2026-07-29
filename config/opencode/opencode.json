@@ -48,7 +48,8 @@
             "which *": "allow",
             "head *": "allow",
             "tail *": "allow",
-            "python3 /opt/opencode/skills/job-efficiency/scripts/*": "allow",
+            "python3 /opt/opencode/skills/job-efficiency/scripts/list_jobs.py": "ask",
+            "python3 /opt/opencode/skills/job-efficiency/scripts/seff_single_job.py": "ask",
             "seff *": "deny",
             "sacct *": "deny",
             "sbatch *": "deny",
@@ -57,6 +58,9 @@
             "sinfo *": "deny",
             "srun": "deny"
         },
+        "edit": {
+          "/opt/opencode/skills/job-efficiency/scripts/*": "deny"
+        }
         "external_directory": {
             "*": "ask",
             "/opt/opencode/skills/*": "allow"
