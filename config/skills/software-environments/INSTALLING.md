@@ -1,6 +1,6 @@
 # Guiding an installation
 
-The ways to install software generally fall into one of the following categories. Identify which ones could be used in the users case. Query the csc-docs tool for each case. E.g. "Compiling on Roihu", "Installing software with Spack on Roihu", and "Installing Python packages own environment container" The categories are:
+The ways to install software generally fall into one of the following categories. Identify which ones could be used in the users case. Query the csc-docs tool for each case, except for Spack. Just use the instructions in this file. Example queries: "Compiling on Roihu", and "Installing Python packages own environment container" The categories are:
 
 1. Compiling.
 2. Spack installation
@@ -34,7 +34,7 @@ spack add <users software>
 spack concretize
 spack install
 ```
-- Instruct the user that they can use the software by `spack env activate my_${upstream}`, and then just the terminal command of their program.
+- Now the user should be able to run their program. If not, instruct the user to `spack env activate my_${upstream}`, and then try to run their program.
 
 3. Ready-made binaries
 4. Containers

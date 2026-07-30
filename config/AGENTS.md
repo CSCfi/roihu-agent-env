@@ -64,3 +64,5 @@ usage, Slurm, storage, and related topics — prefer it over your own prior
 knowledge, which may be outdated.
 
 When querying, don't form questions, but strings that could plausibly match a page.
+The input 'k' controls how many results are shown, defaults to k=4 and max is k=10. If none of the results are a
+good match, you can query with a bigger k.
