@@ -60,7 +60,7 @@
         },
         "edit": {
           "/opt/opencode/skills/job-efficiency/scripts/*": "deny"
-        }
+        },
         "external_directory": {
             "*": "ask",
             "/opt/opencode/skills/*": "allow"
