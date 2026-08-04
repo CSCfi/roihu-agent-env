@@ -57,6 +57,10 @@ cd $SCRIPT_DIR
 
 mkdir -p images
 
+# Update the job-monitoring-sdk:
+rm -rf job-monitoring-sdk
+git clone --depth 1 -b main ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitoring/job-monitoring-sdk.git
+
 # Loop over list length
 for (( i=0; i<${#TARGET_CONTAINERS[@]}; i++ )); do
     CONTAINER=${TARGET_CONTAINERS[i]}

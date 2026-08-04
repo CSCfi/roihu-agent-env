@@ -106,6 +106,24 @@ The agents are by default configured to have access to a Slurm MCP server, which
 
 Agents also have access to the CSC User Guide via a csc-docs MCP server, forked from the MCP made by [LAIFS](https://github.com/lumi-ai-factory/laifs-mcp-server). The User Guide version repo can be found [here](https://gitlab.ci.csc.fi/compen/hpc-environment/docs-mcp-deploy/-/tree/main?ref_type=heads).
 
+If you want to use [Context7](https://context7.com) add this to your ~/.config/opencode/opencode.json. NB! Not a CSC service!
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+        "mcp": {
+          "context7": {
+            "type": "remote",
+            "url": "https://mcp.context7.com/mcp",
+            "headers": {
+              "Authorization": "Bearer {env:CTX7_KEY}"
+            },
+            "enabled": true
+        }
+  }
+}
+``
+
 ### Skills
 
 The agent comes with certain skills to help you with HPC specific tasks. The agent can autonomously use the skills when it sees it necessary, or you can invoke the skill by typing /<skill_name> before your prompt.
