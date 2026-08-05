@@ -122,7 +122,7 @@ If you want to use [Context7](https://context7.com) add this to your ~/.config/o
         }
   }
 }
-``
+```
 
 ### Skills
 
