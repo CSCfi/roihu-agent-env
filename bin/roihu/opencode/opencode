@@ -7,13 +7,14 @@
 
 set -euo pipefail
 
-## TODO check if this is necessary
-#if [[ $( hostname ) == *"login"* ]]; then
-#    echo "ERROR: Do not run AI agents on the login node."
-#    exit 1
-#fi
+#
+# Advanced users can set additional bind paths via the AGENT_BIND_PATHS env variable.
+# AGENT_BIND_PATHS should be a comma separated list of paths. Check documentation for
+# Apptainer bind mounting for details.
+#
 
-BIND_STRING="$PWD"  # Bind current working directory by default
+bind_string="${APPTAINER_BIND:-""},$PWD" # Bind current working directory by default
+
 
 APP_DIRS=(
     "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
@@ -35,37 +36,37 @@ EXTRA_DIRS=(
 #   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
 #
 # SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
-MCP_DIR="${SLURM_MCP_DIR:-$PWD}"
+mcp_dir="${SLURM_MCP_DIR:-$PWD}"
 
 # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
 # a plain lexical sort). compgen lists matches without a literal fallback when
 # none exist, so an empty result is handled by the check below.
-MCP_BIN=$(compgen -G "$MCP_DIR/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
+mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
 
 
-if [[ -z "$MCP_BIN" || ! -x "$MCP_BIN" ]]; then
-    echo "ERROR: no slurm-mcp-v* found in $MCP_DIR — run build_containers.sh first." >&2
+if [[ -z "$mcp_bin" || ! -x "$mcp_bin" ]]; then
+    echo "ERROR: no slurm-mcp-v* found in $mcp_dir — run build_containers.sh first." >&2
     exit 1
 fi
 
 # Start the host-side server (not in the container)
-"$MCP_BIN" &
-SERVER_PID=$!
-trap "kill $SERVER_PID 2>/dev/null" EXIT
+"$mcp_bin" &
+server_pid=$!
+trap "kill $server_pid 2>/dev/null" EXIT
 
 # Wait until it's actually listening before opencode dials it
 for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"
-    BIND_STRING="${BIND_STRING},${path}"
+    bind_string="${bind_string},${path}"
 done
 
 for path in "${EXTRA_DIRS[@]}"; do
     if [[ -d "$path" ]]; then
-        BIND_STRING="${BIND_STRING},${path}"
+        bind_string="${bind_string},${path}"
     fi
 done
 
 # AGENT_IMAGE is set by the module.
-apptainer run -c -B "$BIND_STRING" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
+apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" "$AGENT_IMAGE" "$@"
