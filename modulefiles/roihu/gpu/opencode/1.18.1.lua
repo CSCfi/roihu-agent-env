@@ -42,13 +42,6 @@ setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-aarch64-1.18.1.sif"))
 setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/gpu"))
 
 --
--- Set module-level Singularity bind paths
---
-
--- TODO: Check if these are necessary
--- setenv("APPTAINER_BIND", "/appl")
-
---
 -- Add executables to `PATH`
 --
 
