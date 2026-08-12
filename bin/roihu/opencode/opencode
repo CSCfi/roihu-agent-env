@@ -17,6 +17,8 @@ BIND_STRING="$PWD"  # Bind current working directory by default
 
 APP_DIRS=(
     "$HOME/.cache/opencode"
+    "$HOME/.cache/x86_64/opencode"
+    "$HOME/.cache/aarch64/opencode"
     "$HOME/.config/opencode"
     "$HOME/.local/share/opencode"
     "$HOME/.local/share/x86_64/opencode"
