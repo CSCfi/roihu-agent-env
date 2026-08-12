@@ -39,7 +39,7 @@ local root = myFileName():gsub("/modulefiles/.*$", "")
 -- Specify the container image.
 --
 
-setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-cpu-1.17.0.sif"))
+setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-x86_64-1.17.0.sif"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
 setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/cpu"))

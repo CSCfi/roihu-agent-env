@@ -36,7 +36,7 @@ family("agent_env")
 -- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
 local root = myFileName():gsub("/modulefiles/.*$", "")
 
-setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-gpu-1.17.0.sif"))
+setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-aarch64-1.17.0.sif"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
 setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/gpu"))
