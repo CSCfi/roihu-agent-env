@@ -48,6 +48,7 @@
             "which *": "allow",
             "head *": "allow",
             "tail *": "allow",
+            "hostname": "allow",
             "python3 /opt/opencode/skills/job-efficiency/scripts/list_jobs.py": "ask",
             "python3 /opt/opencode/skills/job-efficiency/scripts/seff_single_job.py": "ask",
             "seff *": "deny",

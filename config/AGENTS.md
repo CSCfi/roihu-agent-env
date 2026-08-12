@@ -3,6 +3,9 @@
 You are running on Roihu, a BullSequana XH3000 supercomputer consisting of several hardware partitions
 targeting different use cases. There are 486 AMD Turin CPU nodes, and 132 Nvidia GH200 GPU nodes.
 
+CPU and GPU halves of Roihu have different processor architectures, and binaries compiled on one side
+will not work on the other.
+
 Expect that all tasks given to you and all questions asked of you exclusively concern Roihu.
 
 ## Containerized environment
@@ -21,8 +24,9 @@ accessible to you:
 ## Running processes
 
 The nodes on Roihu are classified into login nodes and compute nodes. Expect to be on a login node
-by default. Login nodes are shared by all Roihu users and are only intended for simple management
-tasks, e.g.
+by default. Login nodes are split between CPU and GPU sides of Roihu. If you are unsure where you are
+currently running. You can check it by running `hostname`. Login nodes are shared by all Roihu users and
+are only intended for simple management tasks, e.g.
 
 - compiling software (but consider allocating a compute node for large build
   jobs)
@@ -41,7 +45,7 @@ any command needed.
 
 When working on Roihu, the working directory is typically under either the user home directory or a
 project-specific directory, which is in turn located under one of the top-level directories of
-`/projappl` and `/scratch`.
+`/projappl` and `/scratch`. Note that both CPU and GPU sides of Roihu share the same filesystem.
 
 All of these directories, including the user home directory, are on Lustre file systems. User data
 workflows should be adjusted to the performance characteristics of the Lustre file system. In
