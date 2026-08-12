@@ -16,14 +16,10 @@ set -euo pipefail
 BIND_STRING="$PWD"  # Bind current working directory by default
 
 APP_DIRS=(
-    "$HOME/.cache/opencode"
-    "$HOME/.cache/x86_64/opencode"
-    "$HOME/.cache/aarch64/opencode"
-    "$HOME/.config/opencode"
-    "$HOME/.local/share/opencode"
-    "$HOME/.local/share/x86_64/opencode"
-    "$HOME/.local/share/aarch64/opencode"
-    "$HOME/.local/state/opencode"
+    "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
+    "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+    "${XDG_DATA_HOME:-$HOME/.local/share}/opencode"
+    "${XDG_STATE_HOME:-$HOME/.local/state}/opencode"
 )
 
 EXTRA_DIRS=(
