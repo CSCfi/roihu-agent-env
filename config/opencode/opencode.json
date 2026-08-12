@@ -35,6 +35,8 @@
         "*": "ask",
         "read": "allow",
         "slurm_*": "allow",
+        "slurm_launch_job *": "ask",
+        "slurm_cancel_job *": "ask",
         "csc-docs_*": "allow",
         "todowrite": "allow",
         "grep *": "allow",
