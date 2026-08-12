@@ -1,6 +1,6 @@
 ---
 name: batch-scripts
-description: Assist user with creating and optimizing batch job scripts. Use when user asks you to create, optimize or debug their slurm batch job script.
+description: Assist user with creating and optimizing batch job scripts. Use when user asks you to create, optimize or debug their Slurm batch job script. If the user asks for a runscript, submission script, or similar, they likely mean a Slurm submission script.
 ---
 
 # Batch Script Helper
