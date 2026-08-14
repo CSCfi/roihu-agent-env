@@ -1,0 +1,33 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "permissions": {
+        "allow": [
+            "Bash(git add:*)"
+        ],
+        "ask": [
+            "Bash(git commit:*)"
+        ],
+        "deny": [
+            "Read(*.env)",
+            "Bash(rm:*)",
+            "Bash(curl:*)",
+            "Bash(wget:*)",
+            "Bash(seff:*)",
+            "Bash(sacct:*)",
+            "Bash(sbatch:*)",
+            "Bash(squeue:*)",
+            "Bash(scontrol:*)",
+            "Bash(sinfo:*)",
+            "Bash(srun:*)",
+            "Bash(module:*)"
+        ],
+        "defaultMode": "default",
+        "disableBypassPermissionsMode": "disable"
+    },
+    "feedbackSurveyRate": 0,
+    "env": {
+        "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+        "DISABLE_AUTOUPDATER": "1"
+    },
+    "allowAllClaudeAiMcps": true
+}

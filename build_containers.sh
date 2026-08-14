@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-target_containers=("opencode" "opencode")
-target_versions=("1.17.0" "1.18.1")
+target_containers=("opencode" "opencode" "claude")
+target_versions=("1.17.0" "1.18.1" "2.1.223")
 
 # Parses if we are on roihu-cpu or roihu-gpu.
 node_arch=$( arch )

@@ -1,0 +1,83 @@
+Bootstrap: docker
+From: {{ BASE_IMAGE }}
+
+%labels
+    Author mira.salmensaari@csc.fi
+
+%arguments
+    CONFIG_DIR=/etc/claude-code
+    SKILL_DIR=/etc/claude-code/.claude/skills
+    INSTALL_DIR=/opt/claude
+    APP_VERSION=2.1.223
+    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
+    SOCKET_BRIDGE_FILE=socket-bridge
+
+%files
+    config/claude/ {{ CONFIG_DIR }}
+    config/AGENTS.md {{ CONFIG_DIR }}/
+    config/skills {{ SKILL_DIR }}
+    socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
+    job-monitoring-sdk /opt/job-monitoring-sdk
+
+%post
+
+    set -x
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Upgrade system packages and install curl for fetching install script
+    # as well as jq for the script itself.
+    dnf update -y && dnf install -y curl jq wget
+
+    # Install Claude CLI
+    #
+    # Install to user's HOME by default and doesn't have a native way to
+    # specify different location, so we modify the script.
+    #
+
+    curl -fsSL https://claude.ai/install.sh | \
+        sed 's/DOWNLOAD_DIR=.*/DOWNLOAD_DIR=\/opt\/claude\/downloads/' | \
+        bash -s -- {{ APP_VERSION }}
+
+    # Actual binary is at ~/.local/share/claude and the installer creates a symlink to it
+    # Recreate the symlink in a better location.
+    rm ~/.local/bin/claude
+    mv ~/.local/share/claude {{ INSTALL_DIR }}
+    mkdir -p {{ INSTALL_DIR }}/bin && \
+        ln -s {{ INSTALL_DIR }}/claude/versions/{{ APP_VERSION }} {{ INSTALL_DIR }}/bin/claude
+
+    # Install dev tools
+    dnf install -y  perf strace valgrind
+
+    # Install ripgrep
+    # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
+    RIPGREP_ARCHIVE=ripgrep-15.2.0-$( arch )-unknown-linux-musl.tar.gz
+    wget https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE} https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE}.sha256
+    if ! $( sha256sum --check --status ${RIPGREP_ARCHIVE}.sha256 ); then
+        echo "Downloading ripgrep failed"
+        exit 1
+    fi
+    mkdir -p /opt/ripgrep && tar -xf ${RIPGREP_ARCHIVE} -C /opt/ripgrep --strip-components=1
+    ln -s /opt/ripgrep/rg /usr/bin/rg
+
+    # Install Go
+    curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
+    rm go1.26.4.linux-amd64.tar.gz
+
+    dnf install -y python3-pip
+    # Install the job-monitoring python sdk, for the job-efficiency skill. https://gitlab.ci.csc.fi/compen/job-monitoring/job-monitoring-sdk.git
+    cd /opt/job-monitoring-sdk
+    pip install ./
+    pip install pandas
+
+%environment
+    export PATH=$PATH:/usr/local/go/bin
+    export PATH={{ INSTALL_DIR }}/bin:$PATH
+
+# Seems to require --writable-tmpfs to work.
+#%test
+#    HOME="$(mktemp -d)" opencode debug info
+%runscript
+    . /opt/activate.sh  > /dev/null 2>&1
+    claude "$@"
