@@ -25,7 +25,7 @@ From: {{ BASE_IMAGE }}
     export OPENCODE_INSTALL_DIR={{ OPENCODE_INSTALL_DIR }}
 
     # Upgrade system packages and install curl for fetching install script
-    dnf update -y && dnf install -y curl
+    dnf update -y && dnf install -y curl wget
 
     # Install OpenCode
     #
@@ -42,12 +42,15 @@ From: {{ BASE_IMAGE }}
 
     # Install ripgrep
     # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
-    # Check which architecture on and install correct version.
-    if [[ {{ BASE_IMAGE }} == *"core-cpu"* ]]; then
-        dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/r/ripgrep-14.1.1-1.el9.x86_64.rpm
-    else
-        dnf install -y https://dl.fedoraproject.org/pub/epel/9/Everything/aarch64/Packages/r/ripgrep-14.1.1-1.el9.aarch64.rpm
+    RIPGREP_ARCHIVE=ripgrep-15.2.0-$( arch )-unknown-linux-musl.tar.gz
+    wget https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE} https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE}.sha256
+    if ! $( sha256sum --check --status ${RIPGREP_ARCHIVE}.sha256 ); then
+        echo "Downloading ripgrep failed"
+        exit 1
     fi
+    mkdir -p /opt/ripgrep && tar -xf ${RIPGREP_ARCHIVE} -C /opt/ripgrep --strip-components=1
+    ln -s /opt/ripgrep/rg /usr/bin/rg
+    
     # Install Go
     curl -fsSLO https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
     tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz

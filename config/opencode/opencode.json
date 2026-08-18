@@ -59,7 +59,9 @@
             "squeue *": "deny",
             "scontrol *": "deny",
             "sinfo *": "deny",
-            "srun": "deny"
+            "srun": "deny",
+            "curl": "deny",
+            "wget": "deny"
         },
         "edit": {
           "/opt/opencode/skills/job-efficiency/scripts/*": "deny"
