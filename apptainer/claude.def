@@ -14,7 +14,7 @@ From: {{ BASE_IMAGE }}
 
 %files
     config/claude/ {{ CONFIG_DIR }}
-    config/AGENTS.md {{ CONFIG_DIR }}/
+    config/AGENTS.md {{ CONFIG_DIR }}/CLAUDE.md
     config/skills {{ SKILL_DIR }}
     socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
     job-monitoring-sdk /opt/job-monitoring-sdk
@@ -74,10 +74,12 @@ From: {{ BASE_IMAGE }}
 %environment
     export PATH=$PATH:/usr/local/go/bin
     export PATH={{ INSTALL_DIR }}/bin:$PATH
+    # Claude saves some config at ~/.claude.json by default, but we don't want to mount entire HOME
+    export CLAUDE_CONFIG_DIR="$HOME/roihu-claude"
 
-# Seems to require --writable-tmpfs to work.
-#%test
-#    HOME="$(mktemp -d)" opencode debug info
+%test
+    claude doctor
+    claude mcp list
 %runscript
     . /opt/activate.sh  > /dev/null 2>&1
     claude "$@"

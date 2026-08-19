@@ -13,22 +13,15 @@ set -euo pipefail
 # Apptainer bind mounting for details.
 #
 
-bind_string="${APPTAINER_BIND:-""},$PWD" # Bind current working directory by default
+bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
 
-#TODO Check if it needs anything else.
 APP_DIRS=(
-    "$HOME/.claude"
+    "$HOME/roihu-claude"
 )
-#APP_DIRS=(
-#    "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
-#    "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
-#    "${XDG_DATA_HOME:-$HOME/.local/share}/opencode"
-#    "${XDG_STATE_HOME:-$HOME/.local/state}/opencode"
-#)
 
 EXTRA_DIRS=(
     "$HOME/.agents"
-#    "$TMPDIR"
+    "$TMPDIR"
 )
 # Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
 #
@@ -38,26 +31,26 @@ EXTRA_DIRS=(
 #   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
 #
 # SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
-#mcp_dir="${SLURM_MCP_DIR:-$PWD}"
-#
-## Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
-## a plain lexical sort). compgen lists matches without a literal fallback when
-## none exist, so an empty result is handled by the check below.
-#mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
-#
-#
-#if [[ -z "$mcp_bin" || ! -x "$mcp_bin" ]]; then
-#    echo "ERROR: no slurm-mcp-v* found in $mcp_dir — run build_containers.sh first." >&2
-#    exit 1
-#fi
-#
-## Start the host-side server (not in the container)
-#"$mcp_bin" &
-#server_pid=$!
-#trap "kill $server_pid 2>/dev/null" EXIT
-#
-## Wait until it's actually listening before opencode dials it
-#for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
+mcp_dir="${SLURM_MCP_DIR:-$PWD}"
+
+# Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
+# a plain lexical sort). compgen lists matches without a literal fallback when
+# none exist, so an empty result is handled by the check below.
+mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
+
+
+if [[ -z "$mcp_bin" || ! -x "$mcp_bin" ]]; then
+    echo "ERROR: no slurm-mcp-v* found in $mcp_dir — run build_containers.sh first." >&2
+    exit 1
+fi
+
+# Start the host-side server (not in the container)
+"$mcp_bin" &
+server_pid=$!
+trap "kill $server_pid 2>/dev/null" EXIT
+
+# Wait until it's actually listening before opencode dials it
+for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"
