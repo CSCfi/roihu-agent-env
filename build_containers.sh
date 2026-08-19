@@ -6,7 +6,7 @@ target_containers=("opencode" "opencode")
 target_versions=("1.17.0" "1.18.1")
 
 # Parses if we are on roihu-cpu or roihu-gpu.
-node_arch=$( lscpu -J | jq '.lscpu[0] | .data' | tr -d '"' )
+node_arch=$( arch )
 if [[ $node_arch == "aarch64" ]]; then
     base_image="satama.csc.fi/r_installation_spack/core-gpu-gcc-14.3.0-cuda-12.9.1@sha256:96f99061fb4d21360dc89c5d1269397f85a6ad86f09479f08e07ed27b7c98311"
     socket_bridge_file="socket-bridge-gpu"
