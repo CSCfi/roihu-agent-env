@@ -82,4 +82,4 @@ From: {{ BASE_IMAGE }}
     claude mcp list
 %runscript
     . /opt/activate.sh  > /dev/null 2>&1
-    claude "$@"
+    "$@"
