@@ -76,9 +76,17 @@ From: {{ BASE_IMAGE }}
     # variable, this is not implemented, so we need to do it ourselves.
     #
     export OPENCODE_INSTALL_DIR={{ OPENCODE_INSTALL_DIR }}
-    curl -fsSL https://opencode.ai/install | \
-        sed 's/INSTALL_DIR=.*/INSTALL_DIR=$OPENCODE_INSTALL_DIR/' | \
-        bash -s -- --version {{ OPENCODE_VERSION }}
+
+    # Installer doesn't parse "latest" properly as a version, but installs it by default.
+    if [[ {{ OPENCODE_VERSION }} == "latest" ]]; then
+        curl -fsSL https://opencode.ai/install | \
+            sed 's/INSTALL_DIR=.*/INSTALL_DIR=$OPENCODE_INSTALL_DIR/' | \
+            bash
+    else
+        curl -fsSL https://opencode.ai/install | \
+            sed 's/INSTALL_DIR=.*/INSTALL_DIR=$OPENCODE_INSTALL_DIR/' | \
+            bash -s -- --version {{ OPENCODE_VERSION }}
+    fi
 
 
     # Install Claude CLI
@@ -91,12 +99,16 @@ From: {{ BASE_IMAGE }}
         sed 's/DOWNLOAD_DIR=.*/DOWNLOAD_DIR=\/opt\/claude\/downloads/' | \
         bash -s -- {{ CLAUDE_VERSION }}
 
+    # Check claude's actual version in case CLAUDE_VERSION is "stable" or "latest".
+    claude_ver=$( ~/.local/bin/claude --version | cut -d " " -f 1 )
+
     # Actual binary is at ~/.local/share/claude and the installer creates a symlink to it
     # Recreate the symlink in a better location.
     rm ~/.local/bin/claude
     mv ~/.local/share/claude {{ CLAUDE_INSTALL_DIR }}
+    
     mkdir -p {{ CLAUDE_INSTALL_DIR }}/bin && \
-        ln -s {{ CLAUDE_INSTALL_DIR }}/claude/versions/{{ CLAUDE_VERSION }} {{ CLAUDE_INSTALL_DIR }}/bin/claude
+        ln -s {{ CLAUDE_INSTALL_DIR }}/claude/versions/${claude_ver} {{ CLAUDE_INSTALL_DIR }}/bin/claude
 
 
 %environment

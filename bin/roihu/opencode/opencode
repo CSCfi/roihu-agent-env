@@ -25,7 +25,6 @@ APP_DIRS=(
 
 EXTRA_DIRS=(
     "$HOME/.agents"
-    "$HOME/.claude"
     "$TMPDIR"
 )
 # Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+set -x
 
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
@@ -9,7 +10,10 @@ container="roihu-agent-env"
 # Versions to install. Change this as necessary.
 # Order is Opencode version, Claude version
 #
-target_versions=("latest", "stable")
+# Opencode options: <version>, "latest"
+# Claude options: <version>, "latest", "stable"
+#
+target_versions=("latest" "stable")
 
 
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -42,6 +46,11 @@ create_agent_env_module () {
     mkdir -p modulefiles/roihu/${node_type}/roihu-agent-env
     sed "s/__AGENT_IMAGE_NAME__/${image_name}/" modulefiles/roihu/${node_type}/module_template \
         > modulefiles/roihu/${node_type}/roihu-agent-env/${image_version}.lua
+
+    # Set the new module as default
+    rm -f modulefiles/roihu/${node_type}/roihu-agent-env/default
+    ln -s $( realpath modulefiles/roihu/${node_type}/roihu-agent-env/${image_version}.lua ) \
+        modulefiles/roihu/${node_type}/roihu-agent-env/default
 }
 
 
@@ -75,19 +84,18 @@ git clone --depth 1 -b main ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitori
 
 
 # Build the container
+container_name=${container}-${node_arch}-${agent_env_version}.sif
 apptainer build --fakeroot --fix-perms --writable-tmpfs --force \
-    --build-arg "OPENCODE_VERSION=${version[1]}" \
-    --build-arg "CLAUDE_VERSION=${version[2]}" \
+    --build-arg "OPENCODE_VERSION=${target_versions[0]}" \
+    --build-arg "CLAUDE_VERSION=${target_versions[1]}" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
-    images/${container}-${node_arch}-${version}.sif apptainer/${container}.def
+    images/$container_name apptainer/${container}.def
 
 # Generate modulefile
-if [[ $container == "roihu-agent-env" ]]; then
-    create_agent_env_module ${container}-${node_arch}-${version}.sif $version
-fi
+create_agent_env_module $container_name $agent_env_version
 
-
+# Fix permissions
 chgrp -R project_2001659 images
 chgrp -R project_2001659 bin
 cd $old_dir
