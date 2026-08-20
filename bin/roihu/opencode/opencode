@@ -13,7 +13,7 @@ set -euo pipefail
 # Apptainer bind mounting for details.
 #
 
-bind_string="${APPTAINER_BIND:-""},$PWD" # Bind current working directory by default
+bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
 
 
 APP_DIRS=(
