@@ -5,20 +5,21 @@
 --
 
 help([[
+This a Roihu port of LUMI AI Factory agent environment.
+
 The LUMI AI Factory agent environment is a containerized environment
 for running AI coding agents on LUMI in a more secure manner.
 
 This module provides the following commands:
 * opencode
+* claude
 
 More information:
-* https://docs.lumi-supercomputer.eu/laif/software/agent-infrastructure
-* https://github.com/lumi-ai-factory/laifs-agent-env
-* https://opencode.ai/docs
+* https://gitlab.ci.csc.fi/compen/hpc-support/roihu-agent-env
 ]])
 
 --
--- Make this module mutually exclusive with the goose agent environment.
+-- Make this module mutually exclusive with the other agent environments.
 -- Both provide overlapping wrappers and set the same env vars (AGENT_IMAGE,
 -- SLURM_MCP_DIR), so only one may be loaded at a time. family() makes Lmod
 -- refuse to load this module while any module of the same family is loaded.
@@ -26,9 +27,6 @@ More information:
 
 family("agent_env")
 
---
--- Specify the container image.
---
 
 -- Resolve the environment root from this modulefile's own location. myFileName()
 -- is an Lmod builtin returning this file's absolute path; strip /modulefiles/...
@@ -36,16 +34,21 @@ family("agent_env")
 -- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
 local root = myFileName():gsub("/modulefiles/.*$", "")
 
-setenv("AGENT_IMAGE", pathJoin(root, "images/opencode-aarch64-1.17.0.sif"))
+--
+-- Specify the container image.
+--
+
+setenv("AGENT_IMAGE", pathJoin(root, "images/__AGENT_IMAGE_NAME__"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
-setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/gpu"))
+setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/cpu"))
 
 --
 -- Add executables to `PATH`
 --
 
 prepend_path("PATH", pathJoin(root, "bin/roihu/opencode"))
+prepend_path("PATH", pathJoin(root, "bin/roihu/claude"))
 
 --
 -- Print load message

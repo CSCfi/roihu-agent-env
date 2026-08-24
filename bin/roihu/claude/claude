@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# opencode
+# claude
 #
-# Wrapper script for running OpenCode in a container.
+# Wrapper script for running Claude CLI in a container.
 #
 
 set -euo pipefail
@@ -15,12 +15,8 @@ set -euo pipefail
 
 bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
 
-
 APP_DIRS=(
-    "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
-    "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
-    "${XDG_DATA_HOME:-$HOME/.local/share}/opencode"
-    "${XDG_STATE_HOME:-$HOME/.local/state}/opencode"
+    "$HOME/roihu-claude"
 )
 
 EXTRA_DIRS=(
@@ -68,4 +64,4 @@ for path in "${EXTRA_DIRS[@]}"; do
 done
 
 # AGENT_IMAGE is set by the module.
-apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" "$AGENT_IMAGE" opencode "$@"
+apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" "$AGENT_IMAGE" claude "$@"
