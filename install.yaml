@@ -53,6 +53,6 @@
     - name: "Create modulefile. For security reasons the group is `r_installation_spack`."
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/modulefiles/roihu"
-        dest: "{{ modulefiles_dir }}/.roihu-agent-env/default.lua"
+        dest: "{{ modulefiles_dir }}/.roihu-agent-env"
         mode: "u=rw,g=rw,o=r"
         group: "r_installation_spack"
