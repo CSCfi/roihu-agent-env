@@ -8,12 +8,14 @@ container="roihu-agent-env"
 
 #
 # Versions to install. Change this as necessary.
-# Order is Opencode version, Claude version
 #
 # Opencode options: <version>, "latest"
 # Claude options: <version>, "latest", "stable"
+# Codex options: <version>, "latest"
 #
-target_versions=("latest" "stable")
+opencode_version="latest"
+claude_version="stable"
+codex_version="latest"
 
 
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -86,8 +88,9 @@ git clone --depth 1 -b main ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitori
 # Build the container
 container_name=${container}-${node_arch}-${agent_env_version}.sif
 apptainer build --fakeroot --fix-perms --writable-tmpfs --force \
-    --build-arg "OPENCODE_VERSION=${target_versions[0]}" \
-    --build-arg "CLAUDE_VERSION=${target_versions[1]}" \
+    --build-arg "OPENCODE_VERSION=$opencode_version" \
+    --build-arg "CLAUDE_VERSION=$claude_version" \
+    --build-arg "CODEX_VERSION=$codex_version" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
     images/$container_name apptainer/${container}.def

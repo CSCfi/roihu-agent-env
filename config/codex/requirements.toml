@@ -1,0 +1,8 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Highest priority settings. Can't be overriden by the user.
+
+check_for_update_on_startup = false
+
+[features]
+in_app_updates = false

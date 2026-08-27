@@ -4,17 +4,18 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 
 ## Contents
 
-- Apptainer definition file for installing [OpenCode](https://opencode.ai/docs) and [Claude CLI](https://code.claude.com/docs/en/overview) inside a container.
+- Apptainer definition file for installing [OpenCode](https://opencode.ai/docs), [Claude CLI](https://code.claude.com/docs/en/overview) and [Codex](https://learn.chatgpt.com/docs/codex/cli) inside a container.
 - Script `build_roihu_agent_env.sh` for building the images on Roihu.
 - Module files and wrapper scripts for defining which directories to mount inside the container.
 - An `AGENTS.md` file for Roihu adapted from the LAIFS one.
 - An `opencode.json` adds the Slurm MCP-server, CSC User Guide MCP-server, and configuration for [Aitta](https://aitta.csc.fi) use.
 - `managed-settings.json` and `managed-mcp.json` providing default settings for Claude
+- Work in progress `config.toml` and `requirements.toml` for Codex
 - Skills: batch-scripts, job-efficiency, and software environments. See `config/skills` for details.
 
 ## Usage
 ### Agent environment
-The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, container includes the open-source agents [Opencode](https://opencode.ai), as well as [Claude Code](https://claude.com/product/claude-code). The container comes with an AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
+The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, container includes the open-source agent [Opencode](https://opencode.ai), as well as [Claude Code](https://claude.com/product/claude-code). OpenAI's [Codex](https://learn.chatgpt.com/docs/codex/cli) is also available, but currently experimental. The container comes with an AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
 
 **Must** **read:**
 * The user is always responsible for the actions of their AI agents. Any command executed by an agent is run under your personal account.
@@ -22,7 +23,7 @@ The Roihu agent environment is a containerized environment for running AI coding
 * Data security: Your current working directory (```$PWD```) and any subdirectories are accessible inside the environment. Your home directory is not accessible, with the exception of certain directories, where OpenCode looks for configuration files and stores data.
 * Tool use: The default configuration file included for Opencode gives permission for the agent to use read-only tools, and the Slurm-MCP server without permission.
 
-If you wish OpenCode or Claude to have access to directories that are not under your current working directory, you can bind mount them by setting the `AGENT_BIND_PATHS` environment variable.
+If you wish the agent to have access to directories that are not under your current working directory, you can bind mount them by setting the `AGENT_BIND_PATHS` environment variable.
 ```bash
 # Bind mount additional directories (optional)
 export AGENT_BIND_PATHS=/path/to/dir1,/path/to/dir2

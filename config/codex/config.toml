@@ -1,0 +1,22 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Lowest precedence settings. Users can freely override.
+
+# MCP config
+
+[mcp_servers.slurm]
+command = "/opt/socket-bridge"
+
+[mcp_servers.csc-docs]
+url = "https://roihu-agents.2.rahtiapp.fi/mcp"
+
+# Additional helpful defaults.
+
+[shell_environment_policy]
+# Filters variables containing KEY, SECRET, or TOKEN from Codex's environment.
+# This could playsibly break something, so leaving it overridable by users.
+ignore_default_excludes = false
+
+[history]
+# Maximum size for Codex's history file on HOME
+max_bytes = 104857600 # 100 MiB

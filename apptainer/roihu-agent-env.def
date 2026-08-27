@@ -15,6 +15,10 @@ From: {{ BASE_IMAGE }}
     CLAUDE_INSTALL_DIR=/opt/claude
     CLAUDE_VERSION=2.1.223
 
+    CODEX_CONFIG_DIR=/etc/codex
+    CODEX_INSTALL_DIR=/opt/codex
+    CODEX_VERSION=0.147.0
+
     BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
     SOCKET_BRIDGE_FILE=socket-bridge
 
@@ -26,6 +30,8 @@ From: {{ BASE_IMAGE }}
     config/claude/ {{ CLAUDE_CONFIG_DIR }}
     config/AGENTS.md {{ CLAUDE_CONFIG_DIR }}/CLAUDE.md
     config/skills {{ CLAUDE_SKILL_DIR }}
+
+    config/codex/ {{ CODEX_CONFIG_DIR }}
 
     socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
     job-monitoring-sdk /opt/job-monitoring-sdk
@@ -111,10 +117,25 @@ From: {{ BASE_IMAGE }}
         ln -s {{ CLAUDE_INSTALL_DIR }}/claude/versions/${claude_ver} {{ CLAUDE_INSTALL_DIR }}/bin/claude
 
 
+    # Install Codex CLI
+    
+    export CODEX_NON_INTERACTIVE=true
+    export CODEX_INSTALL_DIR={{ CODEX_INSTALL_DIR }}/bin
+    # Codex installs the actual binary to CODEX_HOME, unset it afterwards because it's also used for config.
+    export CODEX_HOME={{ CODEX_INSTALL_DIR }}
+    # Export PATH here already. Otherwise codex tries to add it to the nonexistent bashrc of the building user and fails.
+    export PATH={{ CODEX_INSTALL_DIR }}/bin:$PATH
+
+    curl -fsSL https://chatgpt.com/codex/install.sh | \
+        sh -s -- --release {{ CODEX_VERSION }}
+    unset CODEX_HOME
+
+
 %environment
     export PATH=$PATH:/usr/local/go/bin
     export PATH={{ OPENCODE_INSTALL_DIR }}:$PATH
     export PATH={{ CLAUDE_INSTALL_DIR }}/bin:$PATH
+    export PATH={{ CODEX_INSTALL_DIR }}/bin:$PATH
 
     export OPENCODE_CONFIG={{ OPENCODE_CONFIG_DIR }}/opencode.json
     export OPENCODE_TUI_CONFIG={{ OPENCODE_CONFIG_DIR }}/tui.json
@@ -123,11 +144,21 @@ From: {{ BASE_IMAGE }}
     # Claude saves some config at ~/.claude.json by default, but we don't want to mount entire HOME
     export CLAUDE_CONFIG_DIR="$HOME/roihu-claude"
 
+    # Keep parity with Claude. Probably best to keep configs separate for the container and normal codex anyway.
+    export CODEX_HOME=$HOME/roihu-codex
+
 # Seems to require --writable-tmpfs to work.
 %test
     HOME="$(mktemp -d)" opencode debug info
+    echo ""
+    echo ""
     claude doctor
     claude mcp list
+    echo ""
+    echo ""
+    # Very barebones check for now. codex doctor seems to return exit code 1 just for not being logged in, so it's not a great option.
+    codex --strict-config help
+    CODEX_HOME="$(mktemp -d)" codex mcp list
 
 %runscript
     . /opt/activate.sh  > /dev/null 2>&1

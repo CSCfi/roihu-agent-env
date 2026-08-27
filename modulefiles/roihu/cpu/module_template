@@ -13,6 +13,7 @@ for running AI coding agents on LUMI in a more secure manner.
 This module provides the following commands:
 * opencode
 * claude
+* codex (experimental)
 
 More information:
 * https://gitlab.ci.csc.fi/compen/hpc-support/roihu-agent-env
@@ -49,6 +50,7 @@ setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/cpu"))
 
 prepend_path("PATH", pathJoin(root, "bin/roihu/opencode"))
 prepend_path("PATH", pathJoin(root, "bin/roihu/claude"))
+prepend_path("PATH", pathJoin(root, "bin/roihu/codex"))
 
 --
 -- Print load message

@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# codex
+#
+# Wrapper script for running Codex CLI in a container.
+#
+
+set -euo pipefail
+
+#
+# Advanced users can set additional bind paths via the AGENT_BIND_PATHS env variable.
+# AGENT_BIND_PATHS should be a comma separated list of paths. Check documentation for
+# Apptainer bind mounting for details.
+#
+
+bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
+
+APP_DIRS=(
+    "$HOME/roihu-codex"
+)
+
+EXTRA_DIRS=(
+    "$HOME/.agents"
+    "$TMPDIR"
+)
+# Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
+#
+# Precedence:
+#   1. SLURM_MCP_BIN  — an explicit, pinned path to one binary (set by the module
+#      or the caller). Wins if it points at an executable.
+#   2. Newest slurm-mcp-bin-* in SLURM_MCP_DIR (default: $PWD), by version order.
+#
+# SLURM_MCP_DIR is exported by the module; fall back to CWD if run outside it.
+mcp_dir="${SLURM_MCP_DIR:-$PWD}"
+
+# Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
+# a plain lexical sort). compgen lists matches without a literal fallback when
+# none exist, so an empty result is handled by the check below.
+mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
+
+
+if [[ -z "$mcp_bin" || ! -x "$mcp_bin" ]]; then
+    echo "ERROR: no slurm-mcp-v* found in $mcp_dir — run build_containers.sh first." >&2
+    exit 1
+fi
+
+# Start the host-side server (not in the container)
+"$mcp_bin" &
+server_pid=$!
+trap "kill $server_pid 2>/dev/null" EXIT
+
+# Wait until it's actually listening before opencode dials it
+for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
+
+for path in "${APP_DIRS[@]}"; do
+    mkdir -p "$path"
+    bind_string="${bind_string},${path}"
+done
+
+for path in "${EXTRA_DIRS[@]}"; do
+    if [[ -d "$path" ]]; then
+        bind_string="${bind_string},${path}"
+    fi
+done
+
+# AGENT_IMAGE is set by the module.
+apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" "$AGENT_IMAGE" codex "$@"
