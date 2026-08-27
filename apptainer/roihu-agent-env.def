@@ -20,7 +20,7 @@ From: {{ BASE_IMAGE }}
     CODEX_VERSION=0.147.0
 
     BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
-    SOCKET_BRIDGE_FILE=socket-bridge
+    SOCKET_BRIDGE_FILE=socket-bridge-x86_64
 
 %files
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}

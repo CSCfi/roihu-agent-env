@@ -1,0 +1,58 @@
+- name: "Install roihu-agent-env"
+  hosts:
+    - "roihu_cpu"
+    - "roihu_gpu"
+  become: false
+
+  tasks:
+    - name: "Create directories"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: "directory"
+        mode: "ug=rwx,o=rx,g+s"
+        group: "{{ group }}"
+      loop:
+        - "{{ appl_dir }}/roihu-agent-env"
+        - "{{ appl_dir }}/roihu-agent-env/bin"
+        - "{{ appl_dir }}/roihu-agent-env/images"
+        - "{{ appl_dir }}/roihu-agent-env/apptainer"
+        - "{{ appl_dir }}/roihu-agent-env/config"
+        - "{{ appl_dir }}/roihu-agent-env/docs"
+        - "{{ appl_dir }}/roihu-agent-env/socket-bridge"
+
+    - name: "Create directories"
+      ansible.builtin.file:
+        path: "{{ modulefiles_dir }}/.roihu-agent-env"
+        state: "directory"
+        mode: "ug=rwx,o=rx,g+s"
+        group: "r_installation_spack"
+
+    - name: "Copy files"
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+        group: "{{ group }}"
+      loop:
+        - src: "{{ playbook_dir }}/bin"
+          dest: "{{ appl_dir }}/roihu-agent-env/bin"
+          mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/apptainer"
+          dest: "{{ appl_dir }}/roihu-agent-env/apptainer"
+          mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/config"
+          dest: "{{ appl_dir }}/roihu-agent-env/config"
+          mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/socket-bridge"
+          dest: "{{ appl_dir }}/roihu-agent-env/socket-bridge"
+          mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/build_roihu_agent_env.sh"
+          dest: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+          mode: "u=rwx,g=rwx,o=rx"
+
+    - name: "Create modulefile. For security reasons the group is `r_installation_spack`."
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/modulefiles/roihu"
+        dest: "{{ modulefiles_dir }}/.roihu-agent-env/default.lua"
+        mode: "u=rw,g=rw,o=r"
+        group: "r_installation_spack"

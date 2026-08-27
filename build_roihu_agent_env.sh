@@ -45,14 +45,14 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    mkdir -p modulefiles/roihu/${node_type}/roihu-agent-env
+    MODULE_DIR="/appl/modulefiles/manual/general/${arch}/.roihu-agent-env"
     sed "s/__AGENT_IMAGE_NAME__/${image_name}/" modulefiles/roihu/${node_type}/module_template \
-        > modulefiles/roihu/${node_type}/roihu-agent-env/${image_version}.lua
+        > ${MODULE_DIR}/${image_version}.lua
 
     # Set the new module as default
-    rm -f modulefiles/roihu/${node_type}/roihu-agent-env/default
-    ln -s $( realpath modulefiles/roihu/${node_type}/roihu-agent-env/${image_version}.lua ) \
-        modulefiles/roihu/${node_type}/roihu-agent-env/default
+    rm -f ${MODULE_DIR}/default
+    ln -s $( realpath ${MODULE_DIR}/${image_version}.lua ) \
+        ${MODULE_DIR}/default
 }
 
 
@@ -60,10 +60,10 @@ create_agent_env_module () {
 node_arch=$( arch )
 if [[ $node_arch == "aarch64" ]]; then
     base_image="satama.csc.fi/r_installation_spack/core-gpu-gcc-14.3.0-cuda-12.9.1@sha256:96f99061fb4d21360dc89c5d1269397f85a6ad86f09479f08e07ed27b7c98311"
-    socket_bridge_file="socket-bridge-gpu"
+    socket_bridge_file="socket-bridge-aarch64"
 elif [[ $node_arch == "x86_64" ]]; then
     base_image="satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5"
-    socket_bridge_file="socket-bridge"
+    socket_bridge_file="socket-bridge-x86_64"
 else
     echo "Parsing of the processor architecture failed"
     exit 1

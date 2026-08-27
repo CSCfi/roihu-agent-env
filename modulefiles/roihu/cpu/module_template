@@ -33,7 +33,7 @@ family("agent_env")
 -- is an Lmod builtin returning this file's absolute path; strip /modulefiles/...
 -- to get the install root. (Lmod reads modulefiles with its own Lua interpreter,
 -- so ${BASH_SOURCE[0]} does NOT refer to this file and must not be used here.)
-local root = myFileName():gsub("/modulefiles/.*$", "")
+local root = /appl/soft/manual/general/x86_64/roihu-agent-env
 
 --
 -- Specify the container image.
@@ -42,7 +42,7 @@ local root = myFileName():gsub("/modulefiles/.*$", "")
 setenv("AGENT_IMAGE", pathJoin(root, "images/__AGENT_IMAGE_NAME__"))
 
 -- Path to the host-side Slurm MCP server binary. The opencode/goose wrapper launches this.
-setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp/cpu"))
+setenv("SLURM_MCP_DIR", pathJoin(root, "bin/roihu/slurm-mcp"))
 
 --
 -- Add executables to `PATH`

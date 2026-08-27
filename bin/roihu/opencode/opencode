@@ -40,11 +40,11 @@ mcp_dir="${SLURM_MCP_DIR:-$PWD}"
 # Pick the highest version. `sort -V` orders 0.9.0 < 0.10.0 correctly (unlike
 # a plain lexical sort). compgen lists matches without a literal fallback when
 # none exist, so an empty result is handled by the check below.
-mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-amd64-v*" | sort -V | tail -n1) || true
+mcp_bin=$(compgen -G "$mcp_dir/slurm-mcp-linux-$( arch )-v*" | sort -V | tail -n1) || true
 
 
 if [[ -z "$mcp_bin" || ! -x "$mcp_bin" ]]; then
-    echo "ERROR: no slurm-mcp-v* found in $mcp_dir — run build_containers.sh first." >&2
+    echo "ERROR: no slurm-mcp-$( arch ) found in $mcp_dir — deploy slurm mcp first." >&2
     exit 1
 fi
 
