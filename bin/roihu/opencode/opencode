@@ -56,6 +56,7 @@ trap "kill $server_pid 2>/dev/null" EXIT
 # Wait until it's actually listening before opencode dials it
 for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
+# Combine all bind paths
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"
     bind_string="${bind_string},${path}"
@@ -67,5 +68,15 @@ for path in "${EXTRA_DIRS[@]}"; do
     fi
 done
 
+# Check if we are on login nodes and limit resources if yes.
+# TODO: Check if these are desired or not
+resource_limits=""
+#hosttype=$( hostname | cut -d "-" -f 3)
+#if [[ "$hosttype" == *"login"* ]]; then
+#    # 5G soft limit and 10G hard limit.
+#    # Cpu limits don't seem to work unfortunately. Seems like apptainer can't figure out what is the maximum cores on the machine.
+#    resource_limits="--memory-reservation 5G --memory 10G"
+#fi
+
 # AGENT_IMAGE is set by the module.
-apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" "$AGENT_IMAGE" opencode "$@"
+apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" $resource_limits "$AGENT_IMAGE" opencode "$@"
