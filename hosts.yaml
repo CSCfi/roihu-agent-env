@@ -7,6 +7,7 @@ roihu_cpu:
     group: "r_installation_general"
     appl_dir: "/appl/soft/manual/general/x86_64"
     modulefiles_dir: "/appl/modulefiles/manual/general/x86_64"
+    arch: "x86_64"
 roihu_gpu:
   hosts:
     roihu-gpu-inst.csc.fi:
@@ -16,4 +17,4 @@ roihu_gpu:
     group: "r_installation_general"
     appl_dir: "/appl/soft/manual/general/aarch64"
     modulefiles_dir: "/appl/modulefiles/manual/general/aarch64"
-    
+    arch: "aarch64"    

@@ -45,8 +45,8 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    MODULE_DIR="/appl/modulefiles/manual/general/${arch}/.roihu-agent-env"
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" modulefiles/roihu/${node_type}/module_template \
+    MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/.roihu-agent-env"
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" ${MODULE_DIR}/${node_type}/module_template \
         > ${MODULE_DIR}/${image_version}.lua
 
     # Set the new module as default

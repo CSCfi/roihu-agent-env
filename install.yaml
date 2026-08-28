@@ -14,6 +14,7 @@
       loop:
         - "{{ appl_dir }}/roihu-agent-env"
         - "{{ appl_dir }}/roihu-agent-env/bin"
+        - "{{ appl_dir }}/roihu-agent-env/bin/roihu/slurm-mcp"
         - "{{ appl_dir }}/roihu-agent-env/images"
         - "{{ appl_dir }}/roihu-agent-env/apptainer"
         - "{{ appl_dir }}/roihu-agent-env/config"
@@ -25,7 +26,7 @@
         path: "{{ modulefiles_dir }}/.roihu-agent-env"
         state: "directory"
         mode: "ug=rwx,o=rx,g+s"
-        group: "r_installation_spack"
+        group: "r_installation_general"
 
     - name: "Copy files"
       ansible.builtin.copy:
@@ -34,25 +35,33 @@
         mode: "{{ item.mode }}"
         group: "{{ group }}"
       loop:
-        - src: "{{ playbook_dir }}/bin"
-          dest: "{{ appl_dir }}/roihu-agent-env/bin"
+        - src: "{{ playbook_dir }}/bin/"
+          dest: "{{ appl_dir }}/roihu-agent-env/bin/"
           mode: "u=rwx,g=rwx,o=rx"
-        - src: "{{ playbook_dir }}/apptainer"
-          dest: "{{ appl_dir }}/roihu-agent-env/apptainer"
+        - src: "{{ playbook_dir }}/apptainer/"
+          dest: "{{ appl_dir }}/roihu-agent-env/apptainer/"
           mode: "u=rwx,g=rwx,o=rx"
-        - src: "{{ playbook_dir }}/config"
-          dest: "{{ appl_dir }}/roihu-agent-env/config"
+        - src: "{{ playbook_dir }}/config/"
+          dest: "{{ appl_dir }}/roihu-agent-env/config/"
           mode: "u=rwx,g=rwx,o=rx"
-        - src: "{{ playbook_dir }}/socket-bridge"
-          dest: "{{ appl_dir }}/roihu-agent-env/socket-bridge"
+        - src: "{{ playbook_dir }}/socket-bridge/"
+          dest: "{{ appl_dir }}/roihu-agent-env/socket-bridge/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/build_roihu_agent_env.sh"
           dest: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
           mode: "u=rwx,g=rwx,o=rx"
 
-    - name: "Create modulefile. For security reasons the group is `r_installation_spack`."
+    - name: "Create modulefile. For security reasons the group is `r_installation_general`."
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/modulefiles/roihu"
-        dest: "{{ modulefiles_dir }}/.roihu-agent-env"
+        src: "{{ playbook_dir }}/modulefiles/roihu/"
+        dest: "{{ modulefiles_dir }}/.roihu-agent-env/"
         mode: "u=rw,g=rw,o=r"
-        group: "r_installation_spack"
+        group: "r_installation_general"
+    
+    - name: "Copy slurm-mcp binaries."
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ appl_dir }}/roihu-agent-env/bin/roihu/slurm-mcp/"
+        mode: "u=rwx,g=rwx,o=rx"
+      with_fileglob:
+        - "{{ playbook_dir }}/slurm-mcp/slurm-mcp-linux-{{ arch }}-v*"

@@ -12,6 +12,26 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 - `managed-settings.json` and `managed-mcp.json` providing default settings for Claude
 - Work in progress `config.toml` and `requirements.toml` for Codex
 - Skills: batch-scripts, job-efficiency, and software environments. See `config/skills` for details.
+- Slurm MCP server as a submodule.
+
+## Deployment
+
+Deployment to roihu is done with an ansible script. Install ansible on your machine:
+```bash
+python3 -m pip install --user ansible-core
+```
+
+Make sure the Slurm MCP is up-to-date:
+```bash
+git submodule foreach git pull origin main
+make --directory=slurm-mcp clean build
+```
+
+Deploy to Roihu, run first with `--check` to see what the deployment will do. Then if everything looks good, run without it. 
+```bash
+ansible-playbook -i hosts.yaml install.yaml --check
+```
+
 
 ## Usage
 ### Agent environment
@@ -33,22 +53,20 @@ For more information, see the [apptainer documentation](https://apptainer.org/us
 ### Workflow
 1. You can use the agent in a Roihu terminal window by running the commands below.
 ```bash
-# Load environment module, use either cpu or gpu depending on your current node.
-ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu>
-ml roihu-agent-env
+module load roihu-agent-env
 
 # Start agent
 opencode
 # or
 claude
 ```
-2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the extensions [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run you can install the Opencode extension and use it in the sidebar. You still need to activate the module with the commands `ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu> && ml roihu-agent-env` before using the extension.
+2. You can use your local VSCode with VSCode's Remote-SSH extension, connect to Roihu following the extensions [instructions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh), and after connecting run you can install the Opencode extension and use it in the sidebar. You still need to activate the module with the commands `module load roihu-agent-env` before using the extension.
 3. If you prefer the Roihu Web Interface VSCode, you only need to open a VSCode terminal window and run the commands in it.
-4. You can use the agent in Zed by navigating to 'Settings' > 'AI' > 'Terminal Thread Init Command' and adding `ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu && ml roihu-agent-env && opencode` line to the field. Or add the following to your ~/.config/zed/config.json:
+4. You can use the agent in Zed by navigating to 'Settings' > 'AI' > 'Terminal Thread Init Command' and adding `module load roihu-agent-env && opencode` line to the field. Or add the following to your ~/.config/zed/config.json:
 ```json
 {
   "agent": {
-    "terminal_init_command": "ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/<cpu or gpu> && ml roihu-agent-env && opencode"
+    "terminal_init_command": "module load roihu-agent-env && opencode"
   }
 }
 ```
@@ -56,8 +74,7 @@ To start a new agent thread, click the '+' in the Agent Panel (left edge by defa
 
 I recommend setting an alias for the commands, for example, for running opencode on a cpu node, copy the following to your ~/.bashrc.
 ```bash
-alias opencode_cpu="ml use /projappl/project_2001659/ansoneli/roihu-agent-env/modulefiles/roihu/cpu &&\
-ml roihu-agent-env &&\
+alias opencode_cpu="module load roihu-agent-env &&\
 opencode"
 ```
 
