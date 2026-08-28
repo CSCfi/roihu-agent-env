@@ -157,8 +157,9 @@ From: {{ BASE_IMAGE }}
     echo ""
     echo ""
     # Very barebones check for now. codex doctor seems to return exit code 1 just for not being logged in, so it's not a great option.
+    mkdir -p $CODEX_HOME
     codex --strict-config help
-    CODEX_HOME="$(mktemp -d)" codex mcp list
+    codex mcp list
 
 %runscript
     . /opt/activate.sh  > /dev/null 2>&1
