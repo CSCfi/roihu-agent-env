@@ -65,3 +65,11 @@
         mode: "u=rwx,g=rwx,o=rx"
       with_fileglob:
         - "{{ playbook_dir }}/slurm-mcp/slurm-mcp-linux-{{ arch }}-v*"
+
+    - name: "Create cronjobs for container building."
+      ansible.builtin.cron:
+        name: "Build roihu-agent-env container"
+        minute: "0"
+        hour: "5"
+        weekday: "0"
+        job: "{{ appl_dir}}/roihu-agent-env/build_roihu_agent_env.sh"
