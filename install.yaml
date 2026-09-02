@@ -20,6 +20,7 @@
         - "{{ appl_dir }}/roihu-agent-env/config"
         - "{{ appl_dir }}/roihu-agent-env/docs"
         - "{{ appl_dir }}/roihu-agent-env/socket-bridge"
+        - "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk"
 
     - name: "Create directories"
       ansible.builtin.file:
@@ -49,6 +50,9 @@
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/build_roihu_agent_env.sh"
           dest: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+          mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/job-monitoring-sdk/"
+          dest: "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk/"
           mode: "u=rwx,g=rwx,o=rx"
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."

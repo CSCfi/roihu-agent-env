@@ -77,13 +77,17 @@ fi
 # cd ..
 
 
+if [ ! -d "/appl/soft/manual/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
+  echo "job-monitoring-sdk does not exist."
+  exit 1
+fi
+
+if [ ! -d "/appl/soft/manual/$( arch )/roihu-agent-env/slurm-mcp" ]; then
+  echo "slurm-mcp does not exist."
+  exit 1
+fi
+
 mkdir -p images
-
-
-# Update the job-monitoring-sdk:
-rm -rf job-monitoring-sdk
-git clone --depth 1 -b main ssh://git@gitlab.ci.csc.fi:10022/compen/job-monitoring/job-monitoring-sdk.git || { echo "git clone failed. Make sure you are on roihu-install node."; exit 1; }
-
 
 # Build the container
 container_name=${container}-${node_arch}-${agent_env_version}.sif
