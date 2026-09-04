@@ -44,6 +44,7 @@ The Roihu agent environment is a containerized environment for running AI coding
 * Tool use: The default configuration file included for Opencode gives permission for the agent to use read-only tools, and the Slurm-MCP server without permission.
 
 If you wish the agent to have access to directories that are not under your current working directory, you can bind mount them by setting the `AGENT_BIND_PATHS` environment variable.
+You can also bind additional directories as read-only using `RO_AGENT_BIND_PATHS` env variable.
 ```bash
 # Bind mount additional directories (optional)
 export AGENT_BIND_PATHS=/path/to/dir1,/path/to/dir2

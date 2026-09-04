@@ -12,9 +12,12 @@ set -euo pipefail
 # AGENT_BIND_PATHS should be a comma separated list of paths. Check documentation for
 # Apptainer bind mounting for details.
 #
+# Additionally users can use RO_AGENT_BIND_PATHS to add additional read-only binds.
+# This could be done via AGENT_BIND_PATHS as well using <src>:<dst>:ro syntax, but
+# this is hopefully more user friendly.
+#
 
 bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
-
 
 APP_DIRS=(
     "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
@@ -26,10 +29,17 @@ APP_DIRS=(
 EXTRA_DIRS=(
     "$HOME/.agents"
     "$TMPDIR"
+)
+
+READONLY_DIRS=(
     "/appl"
     "/usr/lib"
     "/usr/lib64"
 )
+# Parse user defined read-only paths.
+IFS=',' read -r -a temparr <<< "${RO_AGENT_BIND_PATHS:-""}"
+READONLY_DIRS=( "${READONLY_DIRS[@]}" "${temparr[@]}" )
+
 
 # Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
 #
@@ -60,6 +70,7 @@ trap "kill $server_pid 2>/dev/null" EXIT
 # Wait until it's actually listening before opencode dials it
 for _ in $(seq 1 50); do [[ -S "$TMPDIR/slurm-mcp.sock" ]] && break; sleep 0.1; done
 
+
 # Combine all bind paths
 for path in "${APP_DIRS[@]}"; do
     mkdir -p "$path"
@@ -71,6 +82,13 @@ for path in "${EXTRA_DIRS[@]}"; do
         bind_string="${bind_string},${path}"
     fi
 done
+
+for path in "${READONLY_DIRS[@]}"; do
+    if [[ -d "$path" ]]; then
+        bind_string="${bind_string},${path}:${path}:ro"
+    fi
+done
+
 
 # Check if we are on login nodes and limit resources if yes.
 # TODO: Check if these are desired or not
