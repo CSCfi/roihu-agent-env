@@ -17,4 +17,4 @@ roihu_gpu:
     group: "r_installation_general"
     appl_dir: "/appl/soft/manual/general/aarch64"
     modulefiles_dir: "/appl/modulefiles/manual/general/aarch64"
-    arch: "aarch64"    
+    arch: "aarch64"

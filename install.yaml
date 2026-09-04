@@ -24,10 +24,15 @@
 
     - name: "Create directories"
       ansible.builtin.file:
-        path: "{{ modulefiles_dir }}/.roihu-agent-env"
+        path: "{{ item }}"
         state: "directory"
         mode: "ug=rwx,o=rx,g+s"
         group: "r_installation_general"
+      loop:
+        - "{{ modulefiles_dir }}/.roihu-agent-env"
+        - "{{ modulefiles_dir }}/.opencode"
+        - "{{ modulefiles_dir }}/.claude"
+        - "{{ modulefiles_dir }}/.codex"
 
     - name: "Copy files"
       ansible.builtin.copy:
@@ -57,11 +62,18 @@
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/modulefiles/roihu/"
-        dest: "{{ modulefiles_dir }}/.roihu-agent-env/"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
         mode: "u=rw,g=rw,o=r"
         group: "r_installation_general"
-    
+      loop:
+        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/opencode/"
+          dest: "{{ modulefiles_dir }}/.opencode/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/claude/"
+          dest: "{{ modulefiles_dir }}/.claude/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/codex/"
+          dest: "{{ modulefiles_dir }}/.codex/"
+
     - name: "Copy slurm-mcp binaries."
       ansible.builtin.copy:
         src: "{{ item }}"
@@ -76,4 +88,4 @@
         minute: "0"
         hour: "5"
         weekday: "0"
-        job: "{{ appl_dir}}/roihu-agent-env/build_roihu_agent_env.sh"
+        job: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
