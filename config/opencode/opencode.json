@@ -43,8 +43,12 @@
         "bash": {
             "*": "ask",
             "ls *": "allow",
+            "ls * -R *": "ask",
+            "ls *--recursive*": "ask",
             "echo *": "allow",
             "grep *": "allow",
+            "grep * -r *": "ask",
+            "grep *--recursive*": "ask",
             "cd *": "allow",
             "cat *": "allow",
             "which *": "allow",

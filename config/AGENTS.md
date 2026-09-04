@@ -4,7 +4,7 @@ You are running on Roihu, a BullSequana XH3000 supercomputer consisting of sever
 targeting different use cases. There are 486 AMD Turin CPU nodes, and 132 Nvidia GH200 GPU nodes.
 
 CPU and GPU halves of Roihu have different processor architectures, and binaries compiled on one side
-will not work on the other.
+will **not** work on the other.
 
 Expect that all tasks given to you and all questions asked of you exclusively concern Roihu.
 
@@ -19,7 +19,8 @@ accessible to you:
 - Directories where the agent should store user-specific files according to the XDG Base Directory
   Specification.
 - Conventional directories for global agent skills: `~/.agents` and `~/.claude`.
-
+- Directories for system-wide application modules. These are generally not available in your PATH by
+  default, and need to be loaded using the Lmod module system.
 
 ## Running processes
 
@@ -35,11 +36,22 @@ are only intended for simple management tasks, e.g.
 - light pre- and postprocessing (a few cores / a few GB of memory)
 
 All compute-heavy tasks must be submitted through the Slurm workload manager so that they are run
-on compute nodes. You have access to read-only Slurm commands with the Slurm-MCP server, which you 
+on compute nodes. You have access to read-only Slurm commands with the Slurm-MCP server, which you
 are configured to have access to.
 
-You are not able to run any Slurm commands without the MCP server, or any Lmod commands. In these cases ask the user to run
-any command needed.
+You are not able to run any Slurm commands without the MCP server. In these cases use the MCP server,
+or ask the user to run the commands directly if the MCP server is insufficient.
+
+## Software environment
+
+Most of the software on Roihu is provided via Lmod modules, and not available by default. Expect that majority
+of software will not be installed in standard locations like /usr/bin, and checking those locations is unlikely
+to be helpful. If you need to check if some software is available, use Lmod commands instead.
+
+You have access to majority of software on Roihu, but not all of it will work due to the containerized
+nature of the working environment. Most python environments in particular are also containerized, and will
+not work properly within another container. Compiling software should work fine however, and any heavy
+computation needs to be done via Slurm anyway, where this will not be an issue.
 
 ## Data storage
 
@@ -47,10 +59,11 @@ When working on Roihu, the working directory is typically under either the user 
 project-specific directory, which is in turn located under one of the top-level directories of
 `/projappl` and `/scratch`. Note that both CPU and GPU sides of Roihu share the same filesystem.
 
-All of these directories, including the user home directory, are on Lustre file systems. User data
-workflows should be adjusted to the performance characteristics of the Lustre file system. In
-particular, having a large number of small files may put stress on the Lustre metadata servers and
-may limit file system performance due to limited striping.
+All of these directories, including the user home directory, are on Lustre file systems. Lustre is
+designed for parallel io of few large files, and heavy io on large amount of small files will stress
+the system, causing issues for all users. To avoid causing problems for everyone, **do not** run
+recursive commands like `ls -R`, `find`, `grep -r` or similar on high level directories like `/`,
+`/scratch`, `/appl` or similar. **Always** try to limit the search depth to minimum first.
 
 Users can check the memory and file usage quotas of their projects with the `csc-workspaces` command,
 and the Billing Unit quotas (BU) with the `csc-projects` but note that you do not have access to these commands.

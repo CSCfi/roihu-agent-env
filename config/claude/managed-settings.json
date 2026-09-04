@@ -5,7 +5,11 @@
             "Bash(git add:*)"
         ],
         "ask": [
-            "Bash(git commit:*)"
+            "Bash(git commit:*)",
+            "Bash(ls * -R *)",
+            "Bash(ls *--recursive*)",
+            "Bash(grep * -r *)",
+            "Bash(grep *--recursive*)"
         ],
         "deny": [
             "Read(*.env)",
@@ -18,8 +22,7 @@
             "Bash(squeue:*)",
             "Bash(scontrol:*)",
             "Bash(sinfo:*)",
-            "Bash(srun:*)",
-            "Bash(module:*)"
+            "Bash(srun:*)"
         ],
         "defaultMode": "default",
         "disableBypassPermissionsMode": "disable"

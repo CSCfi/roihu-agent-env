@@ -22,7 +22,11 @@ APP_DIRS=(
 EXTRA_DIRS=(
     "$HOME/.agents"
     "$TMPDIR"
+    "/appl"
+    "/usr/lib"
+    "/usr/lib64"
 )
+
 # Resolve the versioned Slurm MCP server binary (slurm-mcp-bin-<version>).
 #
 # Precedence:

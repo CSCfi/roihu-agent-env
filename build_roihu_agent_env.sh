@@ -3,6 +3,33 @@
 set -euo pipefail
 set -x
 
+#
+# Parse arguments
+#
+positional_args=() # Unused for now. Keeping the logic for the future
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --build-base-image)
+      build_base_image=1
+      shift # past argument
+      ;;
+    --rebuild-base-image)
+      build_base_image=1
+      shift # past argument
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      positional_args+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
 
@@ -59,10 +86,8 @@ create_agent_env_module () {
 # Parses if we are on roihu-cpu or roihu-gpu.
 node_arch=$( arch )
 if [[ $node_arch == "aarch64" ]]; then
-    base_image="satama.csc.fi/r_installation_spack/core-gpu-gcc-14.3.0-cuda-12.9.1@sha256:96f99061fb4d21360dc89c5d1269397f85a6ad86f09479f08e07ed27b7c98311"
     socket_bridge_file="socket-bridge-aarch64"
 elif [[ $node_arch == "x86_64" ]]; then
-    base_image="satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5"
     socket_bridge_file="socket-bridge-x86_64"
 else
     echo "Parsing of the processor architecture failed"
@@ -89,12 +114,27 @@ fi
 
 mkdir -p images
 
+
+# Build the base image if needed, or rebuild if requested.
+base_image=images/base-image-${node_arch}.sif
+if [[ "${build_base_image:-0}" -eq 1 ]] || [[ ! -f "$base_image"  ]]; then
+    # Using --mksquashfs-args=-no-compression here should make the build a bit faster,
+    # and has no effect on the size of the final container
+    apptainer build --fakeroot --force -B "${TMPDIR:-/tmp}:/tmp" \
+        --mksquashfs-args=-no-compression \
+        --build-arg "IMAGE_VERSION=$agent_env_version" \
+        ${base_image} apptainer/base-image-${node_arch}.def
+fi
+
+
 # Build the container
 container_name=${container}-${node_arch}-${agent_env_version}.sif
-apptainer build --fakeroot --fix-perms --writable-tmpfs --force \
+apptainer build --fakeroot --writable-tmpfs --force \
+    --build-arg "IMAGE_VERSION=$agent_env_version" \
     --build-arg "OPENCODE_VERSION=$opencode_version" \
     --build-arg "CLAUDE_VERSION=$claude_version" \
     --build-arg "CODEX_VERSION=$codex_version" \
+    --build-arg "BOOTSTRAP=localimage" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
     images/$container_name apptainer/${container}.def

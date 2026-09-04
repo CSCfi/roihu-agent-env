@@ -1,10 +1,16 @@
-Bootstrap: docker
+Bootstrap: {{ BOOTSTRAP }}
 From: {{ BASE_IMAGE }}
 
 %labels
     Author mira.salmensaari@csc.fi
+    Version {{ IMAGE_VERSION }}
 
 %arguments
+    IMAGE_VERSION=
+    BOOTSTRAP=docker
+    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
+    SOCKET_BRIDGE_FILE=socket-bridge-x86_64
+
     OPENCODE_CONFIG_DIR=/opt/opencode/config
     OPENCODE_SKILL_DIR=/opt/opencode/skills
     OPENCODE_INSTALL_DIR=/opt/opencode/bin
@@ -18,9 +24,6 @@ From: {{ BASE_IMAGE }}
     CODEX_CONFIG_DIR=/etc/codex
     CODEX_INSTALL_DIR=/opt/codex
     CODEX_VERSION=0.147.0
-
-    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
-    SOCKET_BRIDGE_FILE=socket-bridge-x86_64
 
 %files
     config/opencode/ {{ OPENCODE_CONFIG_DIR }}
@@ -39,18 +42,19 @@ From: {{ BASE_IMAGE }}
 %post
 
     set -x
+    set -e
 
     export DEBIAN_FRONTEND=noninteractive
 
 
-    # Upgrade system packages and install tools for fetching install scripts
-    dnf update -y && dnf install -y curl wget jq
+    # Install tools for fetching install scripts. (Don't upgrade system packages to hopefully maximize compatibility with Roihu's env)
+    dnf install -y wget which
 
     # Install dev tools
-    dnf install -y jq perf strace valgrind
+    dnf install -y jq perf strace
 
 
-    # Install ripgrep
+    # Install ripgrep. Keep installation at /opt in case we want to mount /usr/bin.
     # dnf still doesn't find the package after adding EPEL repo, so installing it directly.
     RIPGREP_ARCHIVE=ripgrep-15.2.0-$( arch )-unknown-linux-musl.tar.gz
     wget https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE} https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/${RIPGREP_ARCHIVE}.sha256
@@ -59,7 +63,6 @@ From: {{ BASE_IMAGE }}
         exit 1
     fi
     mkdir -p /opt/ripgrep && tar -xf ${RIPGREP_ARCHIVE} -C /opt/ripgrep --strip-components=1
-    ln -s /opt/ripgrep/rg /usr/bin/rg
 
 
     # Install Go
@@ -133,6 +136,7 @@ From: {{ BASE_IMAGE }}
 
 %environment
     export PATH=$PATH:/usr/local/go/bin
+    export PATH=$PATH:/opt/ripgrep
     export PATH={{ OPENCODE_INSTALL_DIR }}:$PATH
     export PATH={{ CLAUDE_INSTALL_DIR }}/bin:$PATH
     export PATH={{ CODEX_INSTALL_DIR }}/bin:$PATH
@@ -161,6 +165,7 @@ From: {{ BASE_IMAGE }}
     codex --strict-config help
     codex mcp list
 
+# We inherit the info of user's loaded modules, but not all of their changes -> module update refreshes that.
 %runscript
-    . /opt/activate.sh  > /dev/null 2>&1
+    module update > /dev/null 2>&1
     "$@"
