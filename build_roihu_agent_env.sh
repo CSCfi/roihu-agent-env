@@ -27,7 +27,7 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+set -- "${positional_args[@]}" # restore positional parameters
 
 
 agent_env_version=$( date +'%y.%m.%d' )
