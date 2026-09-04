@@ -43,11 +43,13 @@ The Roihu agent environment is a containerized environment for running AI coding
 * Data security: Your current working directory (```$PWD```) and any subdirectories are accessible inside the environment. Your home directory is not accessible, with the exception of certain directories, where OpenCode looks for configuration files and stores data.
 * Tool use: The default configuration file included for Opencode gives permission for the agent to use read-only tools, and the Slurm-MCP server without permission.
 
-If you wish the agent to have access to directories that are not under your current working directory, you can bind mount them by setting the `AGENT_BIND_PATHS` environment variable.
-You can also bind additional directories as read-only using `RO_AGENT_BIND_PATHS` env variable.
+If you wish the agent to have access to directories that are not under your current working directory, you can bind mount them by using `--roihu-bind <paths>` flag. For more information
+about the wrapper's arguments, use `--roihu-help`.
 ```bash
 # Bind mount additional directories (optional)
-export AGENT_BIND_PATHS=/path/to/dir1,/path/to/dir2
+opencode --roihu-bind /path/to/dir1,/path/to/dir2
+# Bind as read-only (optional)
+opencode --roihu-ro-bind /path/to/dir1,/path/to/dir2
 ```
 For more information, see the [apptainer documentation](https://apptainer.org/user-docs/master/index.html).
 

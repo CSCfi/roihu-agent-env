@@ -17,6 +17,7 @@ This module provides the following commands:
 
 More information:
 * https://gitlab.ci.csc.fi/compen/hpc-support/roihu-agent-env
+* opencode / codex / claude --roihu-help
 ]])
 
 --
@@ -53,25 +54,22 @@ prepend_path("PATH", pathJoin(root, "bin/roihu/codex"))
 -- Print load message
 --
 
---if mode() == "load" then
---    LmodMessage(
---        "\n" ..
---        "=========================================================\n" ..
---        "CAUTION: Loaded LUMI AI Factory agent environment module.\n" ..
---        "=========================================================\n" ..
---        "\n" ..
---        "* Data privacy: The default OpenCode model is hosted by the\n" ..
---        "  company maintaining OpenCode. If you use this model, any data\n" ..
---        "  you enter will be sent to the company.\n" ..
---        "* Data security: Your current working directory and any\n" ..
---        "  subdirectories are accessible inside the environment.\n" ..
---        "* Tool use: The agent must prompt you for permission in order to\n" ..
---        "  use tools other than the LUMI AIF MCP server.\n" ..
---        "* Experimental status: The agent environment is experimental and\n" ..
---        "  may evolve rapidly. Check the `lumi-ai-factory/laifs-agent-env`\n" ..
---        "  GitHub repository for any changes to agent capabilities and\n" ..
---        "  permissions before use.\n" ..
---        "\n" ..
---        "Run `module help " .. myModuleName() .. "` for more information.\n"
---    )
---end
+if mode() == "load" then
+    LmodMessage(
+        "\n" ..
+        "=========================================================\n" ..
+        "CAUTION: Loaded Roihu agent environment module.\n" ..
+        "=========================================================\n" ..
+        "\n" ..
+        "* Data privacy: The default OpenCode model is hosted by the\n" ..
+        "  company maintaining OpenCode. If you use this model, any data\n" ..
+        "  you enter will be sent to the company.\n" ..
+        "  Behaviour of Claude and Codex will depend on the type of your\n" ..
+        "  subscription\n" ..
+        "* Data security: Your current working directory and any\n" ..
+        "  subdirectories are accessible inside the environment.\n" ..
+        "\n" ..
+        "Run `module help " .. myModuleName() .. "` for more information.\n" ..
+        "Or run opencode / claude / codex --roihu-help for list of wrapper arguments."
+    )
+end

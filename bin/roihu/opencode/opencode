@@ -8,16 +8,79 @@
 set -euo pipefail
 
 #
-# Advanced users can set additional bind paths via the AGENT_BIND_PATHS env variable.
-# AGENT_BIND_PATHS should be a comma separated list of paths. Check documentation for
-# Apptainer bind mounting for details.
-#
-# Additionally users can use RO_AGENT_BIND_PATHS to add additional read-only binds.
-# This could be done via AGENT_BIND_PATHS as well using <src>:<dst>:ro syntax, but
-# this is hopefully more user friendly.
+# Parse arguments
 #
 
-bind_string="${AGENT_BIND_PATHS:-""},$PWD" # Bind current working directory by default
+unhandled_args=() # Save all arguments that aren't for the wrapper.
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    --roihu-help)
+        echo ""
+        echo "Wrapper for running OpenCode on Roihu inside a container."
+        echo ""
+        echo "Wrapper specific options:"
+        echo "  --roihu-help              Print this message."
+        echo ""
+        echo "  --roihu-bind <paths>      Mount <paths> inside the container."
+        echo "                            <paths> should be a comma separated list of absolute paths."
+        echo "                            If the agent has its own sandbox, the directory needs to be added there as well separately."
+        echo ""
+        echo "  --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only."
+        echo "                            Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind."
+        echo ""
+        echo "Remaining arguments are passed to OpenCode as is."
+        echo ""
+        exit 0
+        ;;
+    --roihu-bind)
+        user_binds="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --roihu-ro-bind)
+        user_ro_binds="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --roihu-readonly-bind)
+        user_ro_binds="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --roihu-read-only-bind)
+        user_ro_binds="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    *)
+        unhandled_args+=("$1") # save unhandled arg / arg value.
+        shift # past argument / value
+        ;;
+    esac
+done
+set -- "${unhandled_args[@]}" # restore unhandled args.
+
+
+#
+# Also handle AGENT_BIND_PATHS for now, but add a warning about deprecation.
+#
+
+if [ ! -z "${AGENT_BIND_PATHS:-}" ]; then
+    echo ""
+    echo -e "\033[1;33m WARNING:\033[0m Using AGENT_BIND_PATHS is deprecated."
+    echo "  Use --roihu-bind-paths <paths> instead."
+    echo "  Run opencode --roihu-help for usage details"
+    echo ""
+fi
+
+bind_string="$PWD" # Bind current working directory by default
+# Add user defined normal binds. Read-only binds are handled later.
+if [ ! -z "${AGENT_BIND_PATHS:-}" ]; then
+    bind_string="${bind_string},${AGENT_BIND_PATHS}"
+fi
+if [ ! -z "${user_binds:-}" ]; then
+    bind_string="${bind_string},${user_binds}"
+fi
 
 APP_DIRS=(
     "${XDG_CACHE_HOME:-$HOME/.cache}/opencode"
@@ -37,7 +100,7 @@ READONLY_DIRS=(
     "/usr/lib64"
 )
 # Parse user defined read-only paths.
-IFS=',' read -r -a temparr <<< "${RO_AGENT_BIND_PATHS:-""}"
+IFS=',' read -r -a temparr <<< "${user_ro_binds:-""}"
 READONLY_DIRS=( "${READONLY_DIRS[@]}" "${temparr[@]}" )
 
 
