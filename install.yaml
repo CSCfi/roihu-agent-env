@@ -66,6 +66,8 @@
         mode: "u=rw,g=rw,o=r"
         group: "r_installation_general"
       loop:
+        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/module_template"
+          dest: "{{ modulefiles_dir }}/.roihu-agent-env/module_template"
         - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/opencode/"
           dest: "{{ modulefiles_dir }}/.opencode/"
         - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/claude/"
