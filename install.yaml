@@ -18,7 +18,6 @@
         - "{{ appl_dir }}/roihu-agent-env/images"
         - "{{ appl_dir }}/roihu-agent-env/apptainer"
         - "{{ appl_dir }}/roihu-agent-env/config"
-        - "{{ appl_dir }}/roihu-agent-env/docs"
         - "{{ appl_dir }}/roihu-agent-env/socket-bridge"
         - "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk"
 
