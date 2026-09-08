@@ -168,4 +168,13 @@ From: {{ BASE_IMAGE }}
 # We inherit the info of user's loaded modules, but not all of their changes -> module update refreshes that.
 %runscript
     module update > /dev/null 2>&1
+
+    # `module update` re-evaluates the agent-env modulefile from the
+    # bind-mounted /appl, which re-prepends the host-side wrapper directories to
+    # `PATH`. Those wrappers are named after the agents, so they shadow the
+    # container's own binaries and the wrapper ends up calling itself inside the
+    # container (where there is no apptainer). Put the container's install
+    # directories back in front, for `"$@"` and anything the agent spawns.
+    export PATH={{ CLAUDE_INSTALL_DIR }}/bin:{{ CODEX_INSTALL_DIR }}/bin:{{ OPENCODE_INSTALL_DIR }}:$PATH
+
     "$@"

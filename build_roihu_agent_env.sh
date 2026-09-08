@@ -73,7 +73,7 @@ create_agent_env_module () {
         exit 1
     fi
     MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/.roihu-agent-env"
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" ${MODULE_DIR}/${node_type}/module_template \
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" ${MODULE_DIR}/module_template \
         > ${MODULE_DIR}/${image_version}.lua
 
     # Set the new module as default
@@ -102,13 +102,13 @@ fi
 # cd ..
 
 
-if [ ! -d "/appl/soft/manual/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
+if [ ! -d "/appl/soft/manual/general/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
   echo "job-monitoring-sdk does not exist."
   exit 1
 fi
 
-if [ ! -d "/appl/soft/manual/$( arch )/roihu-agent-env/slurm-mcp" ]; then
-  echo "slurm-mcp does not exist."
+if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/roihu/slurm-mcp )" ]; then
+  echo "slurm-mcp binary does not exist."
   exit 1
 fi
 

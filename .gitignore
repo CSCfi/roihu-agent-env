@@ -1,6 +1,6 @@
 *.sif
 socket-bridge/socket-bridge*
 docs/
-modulefiles/roihu/cpu/roihu-agent-env
-modulefiles/roihu/gpu/roihu-agent-env
+modulefiles/roihu/x86_64/roihu-agent-env
+modulefiles/roihu/aarch64/roihu-agent-env
 
