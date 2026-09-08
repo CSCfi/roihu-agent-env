@@ -14,28 +14,10 @@ This is a port of LUMI AI Factory Agent Environment to Roihu. See original repos
 - Skills: batch-scripts, job-efficiency, and software environments. See `config/skills` for details.
 - Slurm MCP server as a submodule.
 
-## Deployment
-
-Deployment to roihu is done with an ansible script. Install ansible on your machine:
-```bash
-python3 -m pip install --user ansible-core
-```
-
-Make sure the Slurm MCP and job-monitoring-sdk are up-to-date, and build slurm-mcp binary:
-```bash
-git submodule foreach git pull origin main
-make --directory=slurm-mcp clean build
-```
-
-Deploy to Roihu, run first with `--check` to see what the deployment will do. Then if everything looks good, run without it. 
-```bash
-ansible-playbook -i hosts.yaml install.yaml --check
-```
-
 
 ## Usage
 ### Agent environment
-The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, container includes the open-source agent [Opencode](https://opencode.ai), as well as [Claude Code](https://claude.com/product/claude-code). OpenAI's [Codex](https://learn.chatgpt.com/docs/codex/cli) is also available, but currently experimental. The container comes with an AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
+The Roihu agent environment is a containerized environment for running AI coding agents in a more secure manner. Currently, container includes the open-source agent [Opencode](https://opencode.ai), as well as [Claude Code](https://claude.com/product/claude-code). OpenAI's [Codex](https://learn.chatgpt.com/docs/codex/cli) is also available, but is currently more experimental. The container comes with an AGENTS.md that gives the agents context about Roihu, the Slurm-MCP and how to access documentation.
 
 **Must** **read:**
 * The user is always responsible for the actions of their AI agents. Any command executed by an agent is run under your personal account.
@@ -44,7 +26,7 @@ The Roihu agent environment is a containerized environment for running AI coding
 * Tool use: The default configuration file included for Opencode gives permission for the agent to use read-only tools, and the Slurm-MCP server without permission.
 
 If you wish the agent to have access to directories that are not under your current working directory, you can bind mount them by using `--roihu-bind <paths>` flag. For more information
-about the wrapper's arguments, use `--roihu-help`.
+about the wrapper's arguments, use `--roihu-help`. The syntax for bind mounting is same as Apptainer's `--bind` flag.
 ```bash
 # Bind mount additional directories (optional)
 opencode --roihu-bind /path/to/dir1,/path/to/dir2
@@ -158,9 +140,9 @@ The current list of skills is:
 
 You can add your own skills in `~/.config/opencode/skills/`.
 
-## Potential issues
+### Potential issues
 
-### Excessive snapshots
+#### Excessive snapshots
 Opencode uses git to create snapshots of file changes during sessions. In most cases this is desirable, but it can cause heavy filesystem load if you run opencode in a directory with large number of files which aren't gitignored. In these cases disable snapshots in config:
 
 ```json
@@ -171,6 +153,24 @@ Opencode uses git to create snapshots of file changes during sessions. In most c
 }
 ```
 
-### Errors when switching between versions
+#### Errors when switching between versions
 
 If you have switched between different Opencode versions and the TUI no longer starts up, this is likely caused by your session database being incompatible with the newer version. Removing your previous sessions fixes the issue. Session database should be located at `~/.local/share/<x86_64 or aarch64>/opencode/opencode.db`.
+
+## Deployment
+
+Deployment to roihu is done with an ansible script. Install ansible on your machine:
+```bash
+python3 -m pip install --user ansible-core
+```
+
+Make sure the Slurm MCP and job-monitoring-sdk are up-to-date, and build slurm-mcp binary:
+```bash
+git submodule foreach git pull origin main
+make --directory=slurm-mcp clean build
+```
+
+Deploy to Roihu, run first with `--check` to see what the deployment will do. Then if everything looks good, run without it. 
+```bash
+ansible-playbook -i hosts.yaml install.yaml --check
+```
