@@ -23,10 +23,13 @@ while [[ $# -gt 0 ]]; do
         echo ""
         echo "  --roihu-bind <paths>      Mount <paths> inside the container."
         echo "                            <paths> should be a comma separated list of absolute paths."
-        echo "                            If the agent has its own sandbox, the directory needs to be added there as well separately."
+        echo "                            If the agent has its own sandbox, the directory needs to be added there separately as well."
         echo ""
         echo "  --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only."
         echo "                            Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind."
+        echo ""
+        echo "  --roihu-read-only-wd      Mount the current working directory as read-only."
+        echo "                            Alternate syntax: --roihu-ro-wd / --roihu-readonly-wd"
         echo ""
         echo "Remaining arguments are passed to OpenCode as is."
         echo ""
@@ -52,6 +55,18 @@ while [[ $# -gt 0 ]]; do
         shift # past argument
         shift # past value
         ;;
+    --roihu-ro-wd)
+        readonly_wd=1
+        shift # past argument
+        ;;
+    --roihu-read-only-wd)
+        readonly_wd=1
+        shift # past argument
+        ;;
+    --roihu-readonly-wd)
+        readonly_wd=1
+        shift # past argument
+        ;;
     *)
         unhandled_args+=("$1") # save unhandled arg / arg value.
         shift # past argument / value
@@ -73,7 +88,13 @@ if [ ! -z "${AGENT_BIND_PATHS:-}" ]; then
     echo ""
 fi
 
-bind_string="$PWD" # Bind current working directory by default
+# Bind current working directory by default. Bind as read-only if specified
+if [ ${readonly_wd:-0} -eq 1 ]; then
+    bind_string="${PWD}:${PWD}:ro"
+else
+    bind_string="$PWD"
+fi
+
 # Add user defined normal binds. Read-only binds are handled later.
 if [ ! -z "${AGENT_BIND_PATHS:-}" ]; then
     bind_string="${bind_string},${AGENT_BIND_PATHS}"
