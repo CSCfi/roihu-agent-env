@@ -3,6 +3,10 @@
 # Highest priority settings. Can't be overriden by the user.
 
 check_for_update_on_startup = false
+allow_remote_control = false
 
 [features]
 in_app_updates = false
+
+[analytics]
+enabled = false
