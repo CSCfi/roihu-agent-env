@@ -7,6 +7,42 @@
 
 set -euo pipefail
 
+print_config () {
+    if apptainer exec "$AGENT_IMAGE" command -v jq >/dev/null 2>&1; then
+        apptainer exec "$AGENT_IMAGE" bash -c \
+            'echo "opencode.json"; cat ${OPENCODE_CONFIG} | jq;\
+             echo "tui.json"; cat ${OPENCODE_TUI_CONFIG} | jq'
+    else
+        apptainer exec "$AGENT_IMAGE" bash -c \
+            'echo "opencode.json"; cat ${OPENCODE_CONFIG};\
+             echo "tui.json"; cat ${OPENCODE_TUI_CONFIG}'
+    fi
+}
+
+print_help () {
+    local wrappername="OpenCode"
+    echo "
+Wrapper for running $wrappername on Roihu inside a container.
+
+Wrapper specific options:
+    --roihu-help              Print this message.
+
+    --roihu-bind <paths>      Mount <paths> inside the container.
+                              <paths> should be a comma separated list of absolute paths.
+                              If the agent has its own sandbox, the directory needs to be added there separately as well.
+
+    --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only.
+                              Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind.
+
+    --roihu-read-only-wd      Mount the current working directory as read-only.
+                              Alternate syntax: --roihu-ro-wd / --roihu-readonly-wd
+
+    --roihu-show-config       Print the included configuration for the agent.
+
+Remaining arguments are passed to $wrappername as is.
+"
+}
+
 #
 # Parse arguments
 #
@@ -15,24 +51,7 @@ unhandled_args=() # Save all arguments that aren't for the wrapper.
 while [[ $# -gt 0 ]]; do
     case $1 in
     --roihu-help)
-        echo ""
-        echo "Wrapper for running OpenCode on Roihu inside a container."
-        echo ""
-        echo "Wrapper specific options:"
-        echo "  --roihu-help              Print this message."
-        echo ""
-        echo "  --roihu-bind <paths>      Mount <paths> inside the container."
-        echo "                            <paths> should be a comma separated list of absolute paths."
-        echo "                            If the agent has its own sandbox, the directory needs to be added there separately as well."
-        echo ""
-        echo "  --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only."
-        echo "                            Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind."
-        echo ""
-        echo "  --roihu-read-only-wd      Mount the current working directory as read-only."
-        echo "                            Alternate syntax: --roihu-ro-wd / --roihu-readonly-wd"
-        echo ""
-        echo "Remaining arguments are passed to OpenCode as is."
-        echo ""
+        print_help
         exit 0
         ;;
     --roihu-bind)
@@ -66,6 +85,16 @@ while [[ $# -gt 0 ]]; do
     --roihu-readonly-wd)
         readonly_wd=1
         shift # past argument
+        ;;
+    --roihu-show-config)
+        print_config
+        exit 0
+        ;;
+    --roihu-*)
+        echo ""
+        echo "ERROR: Unknown argument: $1"
+        print_help
+        exit 1
         ;;
     *)
         unhandled_args+=("$1") # save unhandled arg / arg value.

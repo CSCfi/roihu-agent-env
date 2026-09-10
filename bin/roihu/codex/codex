@@ -7,6 +7,36 @@
 
 set -euo pipefail
 
+print_config () {
+    apptainer exec "$AGENT_IMAGE" bash -c \
+        'echo "config.toml:"; cat /etc/codex/config.toml;\
+         echo "requirements.toml"; cat /etc/codex/requirements.toml'
+}
+
+print_help () {
+    local wrappername="Codex"
+    echo "
+Wrapper for running $wrappername on Roihu inside a container.
+
+Wrapper specific options:
+    --roihu-help              Print this message.
+
+    --roihu-bind <paths>      Mount <paths> inside the container.
+                              <paths> should be a comma separated list of absolute paths.
+                              If the agent has its own sandbox, the directory needs to be added there separately as well.
+
+    --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only.
+                              Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind.
+
+    --roihu-read-only-wd      Mount the current working directory as read-only.
+                              Alternate syntax: --roihu-ro-wd / --roihu-readonly-wd
+
+    --roihu-show-config       Print the included configuration for the agent.
+
+Remaining arguments are passed to $wrappername as is.
+"
+}
+
 #
 # Parse arguments
 #
@@ -15,24 +45,7 @@ unhandled_args=() # Save all arguments that aren't for the wrapper.
 while [[ $# -gt 0 ]]; do
     case $1 in
     --roihu-help)
-        echo ""
-        echo "Wrapper for running Codex CLI on Roihu inside a container."
-        echo ""
-        echo "Wrapper specific options:"
-        echo "  --roihu-help              Print this message."
-        echo ""
-        echo "  --roihu-bind <paths>      Mount <paths> inside the container."
-        echo "                            <paths> should be a comma separated list of absolute paths."
-        echo "                            If the agent has its own sandbox, the directory needs to be added there separately as well."
-        echo ""
-        echo "  --roihu-ro-bind <paths>   Same as --roihu-bind, but paths are mounted as read-only."
-        echo ""
-        echo "  --roihu-read-only-wd      Mount the current working directory as read-only."
-        echo "                            Alternate syntax: --roihu-ro-wd / --roihu-readonly-wd"
-        echo "                            Alternate syntax: --roihu-readonly-bind / --roihu-read-only-bind."
-        echo ""
-        echo "Remaining arguments are passed to Codex as is."
-        echo ""
+        print_help
         exit 0
         ;;
     --roihu-bind)
@@ -67,6 +80,16 @@ while [[ $# -gt 0 ]]; do
         readonly_wd=1
         shift # past argument
         ;;
+    --roihu-show-config)
+        print_config
+        exit 0
+        ;;
+    --roihu-*)
+        echo ""
+        echo "ERROR: Unknown argument: $1"
+        print_help
+        exit 1
+        ;;
     *)
         unhandled_args+=("$1") # save unhandled arg / arg value.
         shift # past argument / value
@@ -96,10 +119,10 @@ else
 fi
 
 # Add user defined normal binds. Read-only binds are handled later.
-if [ ! -z ${AGENT_BIND_PATHS:-} ]; then
+if [ ! -z "${AGENT_BIND_PATHS:-}" ]; then
     bind_string="${bind_string},${AGENT_BIND_PATHS}"
 fi
-if [ ! -z ${user_binds:-} ]; then
+if [ ! -z "${user_binds:-}" ]; then
     bind_string="${bind_string},${user_binds}"
 fi
 
