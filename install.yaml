@@ -14,7 +14,7 @@
       loop:
         - "{{ appl_dir }}/roihu-agent-env"
         - "{{ appl_dir }}/roihu-agent-env/bin"
-        - "{{ appl_dir }}/roihu-agent-env/bin/roihu/slurm-mcp"
+        - "{{ appl_dir }}/roihu-agent-env/bin/slurm-mcp"
         - "{{ appl_dir }}/roihu-agent-env/images"
         - "{{ appl_dir }}/roihu-agent-env/apptainer"
         - "{{ appl_dir }}/roihu-agent-env/config"
