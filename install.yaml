@@ -14,7 +14,7 @@
       loop:
         - "{{ appl_dir }}/roihu-agent-env"
         - "{{ appl_dir }}/roihu-agent-env/bin"
-        - "{{ appl_dir }}/roihu-agent-env/bin/roihu/slurm-mcp"
+        - "{{ appl_dir }}/roihu-agent-env/bin/slurm-mcp"
         - "{{ appl_dir }}/roihu-agent-env/images"
         - "{{ appl_dir }}/roihu-agent-env/apptainer"
         - "{{ appl_dir }}/roihu-agent-env/config"
@@ -40,8 +40,8 @@
         mode: "{{ item.mode }}"
         group: "{{ group }}"
       loop:
-        - src: "{{ playbook_dir }}/bin/"
-          dest: "{{ appl_dir }}/roihu-agent-env/bin/"
+        - src: "{{ playbook_dir }}/bin/roihu/wrappers/"
+          dest: "{{ appl_dir }}/roihu-agent-env/bin/wrappers/v1/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/apptainer/"
           dest: "{{ appl_dir }}/roihu-agent-env/apptainer/"
@@ -78,7 +78,7 @@
     - name: "Copy slurm-mcp binaries."
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ appl_dir }}/roihu-agent-env/bin/roihu/slurm-mcp/"
+        dest: "{{ appl_dir }}/roihu-agent-env/bin/slurm-mcp/v1/"
         mode: "u=rwx,g=rwx,o=rx"
       with_fileglob:
         - "{{ playbook_dir }}/slurm-mcp/slurm-mcp-linux-{{ arch }}-v*"

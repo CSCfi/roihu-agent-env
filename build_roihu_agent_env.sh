@@ -107,7 +107,7 @@ if [ ! -d "/appl/soft/manual/general/$( arch )/roihu-agent-env/job-monitoring-sd
   exit 1
 fi
 
-if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/roihu/slurm-mcp )" ]; then
+if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/slurm-mcp/v1 )" ]; then
   echo "slurm-mcp binary does not exist."
   exit 1
 fi
