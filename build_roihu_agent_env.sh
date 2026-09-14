@@ -102,10 +102,6 @@ fi
 # cd ..
 
 
-if [ ! -d "/appl/soft/manual/general/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
-  echo "job-monitoring-sdk does not exist."
-  exit 1
-fi
 
 if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/slurm-mcp/v1 )" ]; then
   echo "slurm-mcp binary does not exist."
