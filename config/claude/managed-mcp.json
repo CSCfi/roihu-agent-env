@@ -6,7 +6,7 @@
         },
         "csc-docs": {
             "type": "http",
-            "url": "https://roihu-agents.2.rahtiapp.fi/mcp"
+            "url": "https://mcp.csc.docs.fi"
         }
     }
 }

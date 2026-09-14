@@ -12,7 +12,7 @@ launch_job.approval_mode = "prompt"
 cancel_job.approval_mode = "prompt"
 
 [mcp_servers.csc-docs]
-url = "https://roihu-agents.2.rahtiapp.fi/mcp"
+url = "https://mcp.csc.docs.fi"
 
 # Additional helpful defaults.
 
