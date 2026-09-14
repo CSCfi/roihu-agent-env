@@ -90,3 +90,7 @@
         hour: "5"
         weekday: "0"
         job: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+
+    - name: "Build the containers for this deployment"
+      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+
