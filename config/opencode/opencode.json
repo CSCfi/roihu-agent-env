@@ -24,7 +24,7 @@
         },
         "csc-docs": {
             "type": "remote",
-            "url": "https://mcp.csc.docs.fi",
+            "url": "https://mcp.docs.csc.fi",
             "enabled": true
         }
     },

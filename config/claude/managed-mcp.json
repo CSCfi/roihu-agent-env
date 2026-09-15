@@ -6,7 +6,7 @@
         },
         "csc-docs": {
             "type": "http",
-            "url": "https://mcp.csc.docs.fi"
+            "url": "https://mcp.docs.csc.fi"
         }
     }
 }
