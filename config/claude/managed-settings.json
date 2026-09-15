@@ -29,6 +29,16 @@
         "defaultMode": "default",
         "disableBypassPermissionsMode": "disable"
     },
+    "managedMcpServers": [{
+        "slurm": {
+            "type": "stdio",
+            "command": "/opt/socket-bridge"
+        },
+        "csc-docs": {
+            "type": "http",
+            "url": "https://mcp.docs.csc.fi"
+        }
+    }],
     "feedbackSurveyRate": 0,
     "env": {
         "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
