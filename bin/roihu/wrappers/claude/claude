@@ -10,12 +10,10 @@ set -euo pipefail
 print_config () {
     if apptainer exec "$AGENT_IMAGE" command -v jq >/dev/null 2>&1; then
         apptainer exec "$AGENT_IMAGE" bash -c \
-            'echo "managed-settings.json"; cat /etc/claude-code/managed-settings.json | jq;\
-             echo "managed-mcp.json"; cat /etc/claude-code/managed-mcp.json | jq'
+            'echo "managed-settings.json"; cat /etc/claude-code/managed-settings.json | jq'
     else
         apptainer exec "$AGENT_IMAGE" bash -c \
-            'echo "managed-settings.json"; cat /etc/claude-code/managed-settings.json;\
-             echo "managed-mcp.json"; cat /etc/claude-code/managed-mcp.json'
+            'echo "managed-settings.json"; cat /etc/claude-code/managed-settings.json'
     fi
 }
 
