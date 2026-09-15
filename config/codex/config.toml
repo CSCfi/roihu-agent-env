@@ -12,7 +12,7 @@ launch_job.approval_mode = "prompt"
 cancel_job.approval_mode = "prompt"
 
 [mcp_servers.csc-docs]
-url = "https://mcp.docs.csc.fi"
+url = "https://mcp.csc.docs.fi"
 
 # Additional helpful defaults.
 
