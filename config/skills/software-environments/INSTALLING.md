@@ -18,14 +18,14 @@ source /appl/soft/spack/v2026_03/spack/share/spack/setup-env.sh # If this fails,
 source /appl/soft/spack/v2026_03/spack/share/spack/bash/spack-completion.bash
 ```
 - Check if the software is available, as well as the possible versions and variants with 
-`spack info <users software>`. Ask the user if they need a specific versions or variants.
+`spack info <users software>`. Ask the user if they need a specific version or variants.
 If not, go with defaults.
 - The corresponding core environments and the application environments (built on top of the core environments) for Spack v2026_03 are in directories 
 `/appl/soft/spack/core/v2026_03/$( arch )` and 
 `/appl/soft/spack/apps/v2026_03/$( arch )`
 - Run `ls /appl/soft/spack/core/v2026_03/$( arch )/` to see the environment options. Ask the user to choose one.
 - Save the environment name into a variable `upstream`, e.g. `upstream=gc152_ec`.
-- Ask the user where they want to save the environment. If the user doesn't care, save it in `$PWD/environments/my_${upstream}`.
+- Ask the user where they want to save the environment. Suggest `$PWD/environments/my_${upstream}` as the default.
 - Create env into the requested location with `mkdir -p <env_path> && spack env create -d <env_path>`.
 - Activate the environment with `spack env activate -p environments/my_${upstream}`
 -  Next, we set up the environment configuration:
@@ -35,12 +35,18 @@ spack config add config:install_tree:root:$PWD/my_${upstream}-install
 spack config add config:source_cache:source-cache
 spack config add 'config:install_tree:projections:all:"{name}-{version}-{hash:7}"'
 ```
-- Finally:
+- Then add the software to the environment and concretize it.
 ```bash
 spack add <users software>
 spack concretize
-spack install
 ```
+- At this point, look at the concretized specs. If the specs container either large or performance critical packages 
+which were not explicitly requested, check if they would be available from the upstream environment and add them to the 
+environment explicitly. Check packages in the upstream env with `spack -E -c 'upstreams:${upstream}:install_tree:/appl/soft/spack/core/v2026_03/x86_64/gcc152_ec/install_dir' find -l`.
+- If the environment needed changes, reconcretize it with `spack concretize -f`.
+- After the concretized specs look good, present them to the user for review. You **must** do this, and **do not** procceed 
+to installation step without user approval.
+- If the user approves the concretized spec, install the environment with `spack install`.
 - Now the software should be installed. Instruct the user they need run the Spack setup 
 commands from the beginning, as well as `spack env activate my_${upstream}`, to use the 
 software outside of this container.
