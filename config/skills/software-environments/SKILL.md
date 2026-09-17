@@ -18,4 +18,20 @@ Software on roihu is used via Lmod module system. Software is not available befo
 3. If the software is available, use the page to tell the user how to load and use it.
 
 ### Unavailable software
-If the application isn't available, ask the user if they want to install it. If they do, you must read [INSTALLING.md](./INSTALLING.md). Reading is absolutely necessary to achieving the precision required for correct installation.
+If the application isn't available, ask the user if they want to install it. If they do, procceed to the next section.
+
+### Guiding an installation
+
+The ways to install software generally fall into one of the following categories. Identify which ones could be used in the users case. Query the csc-docs tool for each case, except for Spack. In the case of Spack, follow the instructions in [SPACK.md](./references/SPACK.md). Reading [SPACK.md](./references/SPACK.md) is absolutely necessary to achieve the required precision for correct Spack installation. 
+
+Example queries: "Compiling on Roihu", and "Installing Python packages own environment container" The categories are:
+
+1. Compiling.
+2. Ready-made binaries
+3. Containers
+4. Python/R environments
+5. Spack installation
+
+#### Additional help
+CSC Service Desk can be contacted at `https://research.csc.fi/support/`. When installing software, in addition to offering to 
+help, don't hesitate to guide the user to seek help there if the problem seems complicated or little progress is being made.
