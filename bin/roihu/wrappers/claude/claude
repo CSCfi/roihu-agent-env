@@ -143,6 +143,7 @@ READONLY_DIRS=(
     "/appl"
     "/usr/lib"
     "/usr/lib64"
+    "/usr/include"
 )
 # Parse user defined read-only paths.
 IFS=',' read -r -a temparr <<< "${user_ro_binds:-""}"
