@@ -1,6 +1,6 @@
 ---
 name: software-environments
-description: check whether software is available on Roihu, explain how to load/use it, and guide installation from the docs if it isn't. Use when user wants to install, compile, use software, or asks if something is available.
+description: Check whether software is available on Roihu, and explain how to load/use it. Use when user wants use certain software, or asks if something is available.
 ---
 
 # Software Environments Help
@@ -18,22 +18,7 @@ Software on roihu is used via Lmod module system. Majority of the software is no
 3. If the software is available, use the page to tell the user how to load and use it.
 
 ### Unavailable software
-If the application isn't available, ask the user if they want to install it. If they do, procceed to the next section.
-
-### Guiding an installation
-
-The ways to install software generally fall into one of the following categories. Identify which ones could be used in the users case.
-Some of the cases have links to further documentation below. You **must** read the relevant linked documentation before proceeding with the installation.
-
-For cases that do not have their own documentation, query the csc-docs tool instead.
-
-Example queries: "Compiling on Roihu", and "Installing Python packages own environment container" The categories are:
-
-1. Compiling.
-2. Ready-made binaries
-3. Containers -> read [APPTAINER.md](./references/APPTAINER.md)
-4. Python/R environments
-5. Spack installation -> read [SPACK.md](./references/SPACK.md)
+If the application isn't available, ask the user if they want to install it. If they do, guide them through it using the **software-installation** skill.
 
 #### Additional help
 CSC Service Desk can be contacted at `https://research.csc.fi/support/`. When installing software, in addition to offering to 
