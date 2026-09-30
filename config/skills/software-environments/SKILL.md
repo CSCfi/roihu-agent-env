@@ -17,6 +17,11 @@ Software on roihu is used via Lmod module system. Majority of the software is no
 2. If an application has a page, check the Available-section to see if it's available on Roihu. If the page doesn't exist, or Roihu is not mentioned, assume that it is not pre-installed.
 3. If the software is available, use the page to tell the user how to load and use it.
 
+### Detailed category-specific information
+If the software belongs to one of these categories, read the corresponding reference.
+1. Python -> read [PYTHON.md](./references/PYTHON.md)
+
+
 ### Unavailable software
 If the application isn't available, ask the user if they want to install it. If they do, guide them through it using the **software-installation** skill.
 

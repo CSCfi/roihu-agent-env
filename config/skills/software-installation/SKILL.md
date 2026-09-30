@@ -15,8 +15,9 @@ Example queries: "Compiling on Roihu", and "Installing Python packages own envir
 1. Compiling.
 2. Ready-made binaries
 3. Containers -> read [APPTAINER.md](./references/APPTAINER.md)
-4. Python/R environments
-5. Spack installation -> read [SPACK.md](./references/SPACK.md)
+4. Python environments -> read [PYTHON.md](./references/PYTHON.md)
+5. R packages -> include "r-env" in the search for ideal results.
+6. Spack installation -> read [SPACK.md](./references/SPACK.md)
 
 #### Additional help
 CSC Service Desk can be contacted at `https://research.csc.fi/support/`. When installing software, in addition to offering to 
