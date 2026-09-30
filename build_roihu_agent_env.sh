@@ -122,7 +122,7 @@ if [[ "${build_base_image:-0}" -eq 1 ]] || [[ ! -f "$base_image"  ]]; then
     # and has no effect on the size of the final container
     apptainer build --fakeroot --force -B "${TMPDIR:-/tmp}:/tmp" \
         --mksquashfs-args=-no-compression \
-        --build-arg "IMAGE_VERSION=$agent_env_version" \
+        --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
         ${base_image} apptainer/base-image-${node_arch}.def
 fi
 
@@ -130,7 +130,8 @@ fi
 # Build the container
 container_name=${container}-${node_arch}-${agent_env_version}.sif
 apptainer build --fakeroot --writable-tmpfs --force \
-    --build-arg "IMAGE_VERSION=$agent_env_version" \
+    --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
+    --build-arg "BASE_IMAGE_COMMIT=$( apptainer inspect --json $base_image | jq -r '.data.attributes.labels."Image-commit"' )" \
     --build-arg "OPENCODE_VERSION=$opencode_version" \
     --build-arg "CLAUDE_VERSION=$claude_version" \
     --build-arg "CODEX_VERSION=$codex_version" \

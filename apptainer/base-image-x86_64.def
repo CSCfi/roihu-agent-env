@@ -4,10 +4,10 @@ Bootstrap: docker
 From: {{ BASE_IMAGE }}
 
 %labels
-    Version {{ IMAGE_VERSION }}
+    Image-commit {{ IMAGE_COMMIT }}
 
 %arguments
-    IMAGE_VERSION=
+    IMAGE_COMMIT=
     BASE_IMAGE=docker.io/rockylinux/rockylinux:9.7
 
 %setup

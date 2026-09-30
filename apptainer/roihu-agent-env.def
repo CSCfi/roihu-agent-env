@@ -3,10 +3,12 @@ From: {{ BASE_IMAGE }}
 
 %labels
     Author mira.salmensaari@csc.fi
-    Version {{ IMAGE_VERSION }}
+    Image-commit {{ IMAGE_COMMIT }}
+    Base-image-commit {{ BASE_IMAGE_COMMIT }}
 
 %arguments
-    IMAGE_VERSION=
+    IMAGE_COMMIT=
+    BASE_IMAGE_COMMIT=
     BOOTSTRAP=docker
     BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
     SOCKET_BRIDGE_FILE=socket-bridge-x86_64
