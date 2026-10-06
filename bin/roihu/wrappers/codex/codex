@@ -33,6 +33,9 @@ Wrapper specific options:
 
     --roihu-show-config       Print the included configuration for the agent.
 
+    --roihu-shell             Open a shell inside the container instead of lauching the agent.
+                              Any arguments to $wrappername are ignored.
+
 Remaining arguments are passed to $wrappername as is.
 "
 }
@@ -83,6 +86,10 @@ while [[ $# -gt 0 ]]; do
     --roihu-show-config)
         print_config
         exit 0
+        ;;
+    --roihu-shell)
+        open_shell=1
+        shift
         ;;
     --roihu-*)
         echo ""
@@ -206,4 +213,9 @@ resource_limits=""
 #fi
 
 # AGENT_IMAGE is set by the module.
-apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" $resource_limits "$AGENT_IMAGE" codex "$@"
+if [ ${open_shell:-0} -eq 1 ]; then
+    # Use apptainer run instead of apptainer shell so the env setup scripts from runscript get executed.
+    apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" $resource_limits "$AGENT_IMAGE" bash
+else
+    apptainer run -c -B "$bind_string" --no-privs --cwd "$PWD" $resource_limits "$AGENT_IMAGE" codex "$@"
+fi
