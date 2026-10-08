@@ -166,7 +166,7 @@ python3 -m pip install --user ansible-core
 
 Make sure the Slurm MCP and job-monitoring-sdk are up-to-date, and build slurm-mcp binary:
 ```bash
-git submodule foreach git pull origin main
+git submodule update --remote
 make --directory=slurm-mcp clean build
 ```
 
