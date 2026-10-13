@@ -157,6 +157,9 @@ READONLY_DIRS=( "${READONLY_DIRS[@]}" "${temparr[@]}" )
 # Blacklist for software that shouldn't be mounted.
 BLACKLISTED_APP_DIRS=(
     "/appl/soft/manual/chem/x86_64/molpro"
+    "/appl/soft/manual/chem/x86_64/gaussian"
+    "/appl/soft/manual/phys/x86_64/gcc152_ec/vasp-6.4.3-46w4pqk"
+    "/appl/soft/manual/phys/x86_64/gcc152_ec/vasp-6.6.1-txlbv5v"
 )
 # Empty directory that gets mounted on top of blacklisted software.
 # Currently hardcoded but could be set by the module later via the env variable.
