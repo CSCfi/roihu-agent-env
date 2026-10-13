@@ -157,7 +157,8 @@ Opencode uses git to create snapshots of file changes during sessions. In most c
 
 If you have switched between different Opencode versions and the TUI no longer starts up, this is likely caused by your session database being incompatible with the newer version. Removing your previous sessions fixes the issue. Session database should be located at `~/.local/share/<x86_64 or aarch64>/opencode/opencode.db`.
 
-## Deployment
+## Development
+### Deployment
 
 Deployment to roihu is done with an ansible script. Install ansible on your machine:
 ```bash
@@ -174,3 +175,9 @@ Deploy to Roihu, run first with `--check` to see what the deployment will do. Th
 ```bash
 ansible-playbook -i hosts.yaml install.yaml --check
 ```
+
+### Blacklisting software
+
+Some software have license terms that forbid AI use. Currently the agent-env mounts the entire /appl tree by default, so these need to be blacklisted explicitly.
+
+This is done by adding the blacklisted path to `BLACKLISTED_APP_DIRS` list in each wrapper, as well as adding it to the `forbid` list in `config/modulerc.lua`. Forbidding the module doesn't actually stop the agent from accessing the files, but it's useful for giving users info on why the software is unusable.

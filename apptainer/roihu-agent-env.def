@@ -41,6 +41,8 @@ From: {{ BASE_IMAGE }}
     socket-bridge/{{ SOCKET_BRIDGE_FILE }} /opt/socket-bridge
     job-monitoring-sdk /opt/job-monitoring-sdk
 
+    config/modulerc.lua /opt/lmod_conf/
+
 %post
 
     set -x
@@ -153,6 +155,9 @@ From: {{ BASE_IMAGE }}
     # Keep parity with Claude. Probably best to keep configs separate for the container and normal codex anyway.
     export CODEX_HOME=$HOME/roihu-codex
 
+    # Use custom modulerc to blacklist modules.
+    export LMOD_MODULERC="${LMOD_MODULERC}:/opt/lmod_conf/modulerc.lua"
+
 # Seems to require --writable-tmpfs to work.
 %test
     HOME="$(mktemp -d)" opencode debug info
@@ -167,16 +172,18 @@ From: {{ BASE_IMAGE }}
     codex --strict-config help
     codex mcp list
 
-# We inherit the info of user's loaded modules, but not all of their changes -> module update refreshes that.
 %runscript
-    module update > /dev/null 2>&1
 
-    # `module update` re-evaluates the agent-env modulefile from the
-    # bind-mounted /appl, which re-prepends the host-side wrapper directories to
-    # `PATH`. Those wrappers are named after the agents, so they shadow the
-    # container's own binaries and the wrapper ends up calling itself inside the
-    # container (where there is no apptainer). Put the container's install
-    # directories back in front, for `"$@"` and anything the agent spawns.
-    export PATH={{ CLAUDE_INSTALL_DIR }}/bin:{{ CODEX_INSTALL_DIR }}/bin:{{ OPENCODE_INSTALL_DIR }}:$PATH
+    set -e
+
+    # Get rid of the roihu-agent-env so wrappers don't override the actual executables.
+    module unload roihu-agent-env
+
+    # We inherit the info of user's loaded modules, but not all of their changes -> module update refreshes that.
+    # In case this fails, rerun it to output the error message and inform the user of the probable cause.
+    module update > /dev/null 2>&1 || (module update || \
+    (echo "One or more of your modules could not be loaded.
+This is generally because their license agreement prohibits AI use.
+Unload the listed module(s) and try again"; exit 1))
 
     "$@"

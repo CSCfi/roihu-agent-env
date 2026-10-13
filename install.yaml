@@ -20,6 +20,7 @@
         - "{{ appl_dir }}/roihu-agent-env/config"
         - "{{ appl_dir }}/roihu-agent-env/socket-bridge"
         - "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk"
+        - "{{ appl_dir }}/roihu-agent-env/blacklist-dir"
 
     - name: "Create directories"
       ansible.builtin.file:
