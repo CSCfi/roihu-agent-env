@@ -5,10 +5,11 @@
             "Bash(git add:*)"
         ],
         "ask": [
+            "Read(/appl/*)",
             "Bash(git commit:*)",
-            "Bash(ls * -R *)",
+            "Bash(ls *-R *)",
             "Bash(ls *--recursive*)",
-            "Bash(grep * -r *)",
+            "Bash(grep *-r *)",
             "Bash(grep *--recursive*)",
             "mcp__slurm__launch_job",
             "mcp__slurm__cancel_job"

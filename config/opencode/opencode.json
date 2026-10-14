@@ -33,7 +33,13 @@
     },
     "permission": {
         "*": "ask",
-        "read": "allow",
+        "read": {
+            "*": "allow",
+            "*.env": "deny",
+            "*.env.*": "deny",
+            "*.env.example": "allow",
+            "/appl/*": "ask"
+        },
         "slurm_*": "allow",
         "slurm_launch_job *": "ask",
         "slurm_cancel_job *": "ask",
@@ -43,11 +49,11 @@
         "bash": {
             "*": "ask",
             "ls *": "allow",
-            "ls * -R *": "ask",
+            "ls *-R *": "ask",
             "ls *--recursive*": "ask",
             "echo *": "allow",
             "grep *": "allow",
-            "grep * -r *": "ask",
+            "grep *-r *": "ask",
             "grep *--recursive*": "ask",
             "cd *": "allow",
             "cat *": "allow",
@@ -68,7 +74,8 @@
             "wget": "deny"
         },
         "edit": {
-          "/opt/opencode/skills/job-efficiency/scripts/*": "deny"
+          "/opt/opencode/skills/job-efficiency/scripts/*": "deny",
+          "/appl/*": "deny"
         },
         "external_directory": {
             "*": "ask",
