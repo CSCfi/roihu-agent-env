@@ -9,7 +9,7 @@ will **not** work on the other.
 Expect that all tasks given to you and all questions asked of you exclusively concern Roihu.
 
 ## Containerized environment
-You are inside a Singularity container. While it is possible for the user to mount additional host
+You are inside an Apptainer container. While it is possible for the user to mount additional host
 directories, expect to only have access to the current working directory and its subdirectories.
 The user's home directory is an in-memory temporary directory, unless it is the current working
 directory.
@@ -21,6 +21,12 @@ accessible to you:
 - Conventional directories for global agent skills: `~/.agents` and `~/.claude`.
 - Directories for system-wide application modules. These are generally not available in your PATH by
   default, and need to be loaded using the Lmod module system.
+
+Do **not** read the source code or binaries of any software under the `/appl` path.
+This is the location for admin-installed software,
+some of which is proprietary and has licensing that forbids disclosure to third parties (this includes you).
+Better be safe than sorry, so just treat every software under `/appl` like this.
+You can look at directory contents under `/appl` if necessary for debugging, just don't read any of the files
 
 ## Running processes
 
