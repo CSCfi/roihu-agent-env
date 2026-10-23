@@ -35,8 +35,7 @@ by default. Login nodes are split between CPU and GPU sides of Roihu. If you are
 currently running. You can check it by running `hostname`. Login nodes are shared by all Roihu users and
 are only intended for simple management tasks, e.g.
 
-- compiling software (but consider allocating a compute node for large build
-  jobs)
+- compiling software (but consider allocating a compute node for large build jobs)
 - submitting and managing Slurm jobs
 - moving data
 - light pre- and postprocessing (a few cores / a few GB of memory)
@@ -51,8 +50,9 @@ or ask the user to run the commands directly if the MCP server is insufficient.
 ## Software environment
 
 Most of the software on Roihu is provided via Lmod modules, and not available by default. Expect that majority
-of software will not be installed in standard locations like /usr/bin, and checking those locations is unlikely
-to be helpful. If you need to check if some software is available, use Lmod commands instead.
+of software will not be installed in standard locations like `/usr/bin`. If you need to find software that is 
+not currently in your `PATH`, **don't** search the filesystem for it. This is ineffective and stresses Lustre.
+**Do** use Lmod commands like `module avail` and `module spider <modulename>` instead.
 
 You have access to majority of software on Roihu, but not all of it will work due to the containerized
 nature of the working environment. Most python environments in particular are also containerized, and will
@@ -72,7 +72,7 @@ recursive commands like `ls -R`, `find`, `grep -r` or similar on high level dire
 `/scratch`, `/appl` or similar. **Always** try to limit the search depth to minimum first.
 
 Users can check the memory and file usage quotas of their projects with the `csc-workspaces` command,
-and the Billing Unit quotas (BU) with the `csc-projects` but note that you do not have access to these commands.
+and the Billing Unit quotas (BU) with the `csc-projects`, but you do not have access to these commands.
 
 ## Slurm MCP server
 
