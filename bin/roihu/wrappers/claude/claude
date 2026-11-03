@@ -25,6 +25,9 @@ Wrapper for running $wrappername on Roihu inside a container.
 Wrapper specific options:
     --roihu-help              Print this message.
 
+    --roihu-mcp-setup         Configure MCP servers provided by the module.
+                              Currently only required by Slurm MCP.
+
     --roihu-bind <paths>      Mount <paths> inside the container.
                               <paths> should be a comma separated list of absolute paths.
                               If the agent has its own sandbox, the directory needs to be added there separately as well.
@@ -44,6 +47,12 @@ Remaining arguments are passed to $wrappername as is.
 "
 }
 
+setup_mcp () {
+    apptainer run -c --no-privs -B "$HOME/roihu-claude" "$AGENT_IMAGE" \
+        bash -c 'claude mcp add slurm --scope user -- /opt/socket-bridge \
+        && touch "$CLAUDE_CONFIG_DIR/.roihu-mcp-setup-done"'
+}
+
 #
 # Parse arguments
 #
@@ -53,6 +62,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in
     --roihu-help)
         print_help
+        exit 0
+        ;;
+    --roihu-mcp-setup)
+        setup_mcp
         exit 0
         ;;
     --roihu-bind)
@@ -235,6 +248,14 @@ resource_limits=""
 #    # Cpu limits don't seem to work unfortunately. Seems like apptainer can't figure out what is the maximum cores on the machine.
 #    resource_limits="--memory-reservation 5G --memory 10G"
 #fi
+
+
+# Throw a warning if slurm MCP is not setup yet.
+if [ ! -e "$HOME/roihu-claude/.roihu-mcp-setup-done" ]; then
+    echo "Warning: Slurm MCP is not configured. Run \"claude --roihu-mcp-setup\" first."
+    echo ""
+fi
+
 
 # AGENT_IMAGE is set by the module.
 if [ "${open_shell:-0}" -eq 1 ]; then
