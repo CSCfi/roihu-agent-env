@@ -10,7 +10,7 @@ From: {{ BASE_IMAGE }}
     IMAGE_COMMIT=
     BASE_IMAGE_COMMIT=
     BOOTSTRAP=docker
-    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-gcc-15.2.0@sha256:e64b470bce6bd9786d4c4f195bdb0f7827bb441c6075d0824fd5842a3aca6fe5
+    BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-deps@sha256:36643a49046f2bcb8220daf4e176655056a5ee00883c59f3af8698f50ee383a5
     SOCKET_BRIDGE_FILE=socket-bridge-x86_64
 
     OPENCODE_CONFIG_DIR=/opt/opencode/config

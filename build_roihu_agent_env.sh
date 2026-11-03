@@ -4,30 +4,22 @@ set -euo pipefail
 set -x
 
 #
-# Parse arguments
+# Parse arguments. Currently unused
 #
-positional_args=() # Unused for now. Keeping the logic for the future
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --build-base-image)
-      build_base_image=1
-      shift # past argument
-      ;;
-    --rebuild-base-image)
-      build_base_image=1
-      shift # past argument
-      ;;
-    -*|--*)
-      echo "Unknown option $1"
-      exit 1
-      ;;
-    *)
-      positional_args+=("$1") # save positional arg
-      shift # past argument
-      ;;
-  esac
-done
-set -- "${positional_args[@]}" # restore positional parameters
+#positional_args=() # Unused for now. Keeping the logic for the future
+#while [[ $# -gt 0 ]]; do
+#  case $1 in
+#    -*|--*)
+#      echo "Unknown option $1"
+#      exit 1
+#      ;;
+#    *)
+#      positional_args+=("$1") # save positional arg
+#      shift # past argument
+#      ;;
+#  esac
+#done
+#set -- "${positional_args[@]}" # restore positional parameters
 
 
 agent_env_version=$( date +'%y.%m.%d' )
@@ -87,8 +79,12 @@ create_agent_env_module () {
 node_arch=$( arch )
 if [[ $node_arch == "aarch64" ]]; then
     socket_bridge_file="socket-bridge-aarch64"
+    base_image_commit="sha256:95a34da33f1cdc53d21af305f5a1e6fff8d1116aa34918a104dd0d2aadefdf5e"
+    base_image="satama.csc.fi/r_installation_spack/core-gpu-deps@${base_image_commit}"
 elif [[ $node_arch == "x86_64" ]]; then
     socket_bridge_file="socket-bridge-x86_64"
+    base_image_commit="sha256:36643a49046f2bcb8220daf4e176655056a5ee00883c59f3af8698f50ee383a5"
+    base_image="satama.csc.fi/r_installation_spack/core-cpu-deps@${base_image_commit}"
 else
     echo "Parsing of the processor architecture failed"
     exit 1
@@ -115,27 +111,15 @@ fi
 mkdir -p images
 
 
-# Build the base image if needed, or rebuild if requested.
-base_image=images/base-image-${node_arch}.sif
-if [[ "${build_base_image:-0}" -eq 1 ]] || [[ ! -f "$base_image"  ]]; then
-    # Using --mksquashfs-args=-no-compression here should make the build a bit faster,
-    # and has no effect on the size of the final container
-    apptainer build --fakeroot --force -B "${TMPDIR:-/tmp}:/tmp" \
-        --mksquashfs-args=-no-compression \
-        --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
-        ${base_image} apptainer/base-image-${node_arch}.def
-fi
-
-
 # Build the container
 container_name=${container}-${node_arch}-${agent_env_version}.sif
 apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
-    --build-arg "BASE_IMAGE_COMMIT=$( apptainer inspect --json $base_image | jq -r '.data.attributes.labels."Image-commit"' )" \
+    --build-arg "BASE_IMAGE_COMMIT=$base_image_commit" \
     --build-arg "OPENCODE_VERSION=$opencode_version" \
     --build-arg "CLAUDE_VERSION=$claude_version" \
     --build-arg "CODEX_VERSION=$codex_version" \
-    --build-arg "BOOTSTRAP=localimage" \
+    --build-arg "BOOTSTRAP=docker" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
     images/$container_name apptainer/${container}.def
