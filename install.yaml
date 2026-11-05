@@ -13,14 +13,17 @@
         group: "{{ group }}"
       loop:
         - "{{ appl_dir }}/roihu-agent-env"
-        - "{{ appl_dir }}/roihu-agent-env/bin"
-        - "{{ appl_dir }}/roihu-agent-env/bin/slurm-mcp"
         - "{{ appl_dir }}/roihu-agent-env/images"
-        - "{{ appl_dir }}/roihu-agent-env/apptainer"
-        - "{{ appl_dir }}/roihu-agent-env/config"
-        - "{{ appl_dir }}/roihu-agent-env/socket-bridge"
-        - "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk"
         - "{{ appl_dir }}/roihu-agent-env/blacklist-dir"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/apptainer"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/config"
+
+        # TODO how to handle these
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin/slurm-mcp"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/socket-bridge"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk"
 
     - name: "Create directories"
       ansible.builtin.file:
@@ -42,23 +45,26 @@
         group: "{{ group }}"
       loop:
         - src: "{{ playbook_dir }}/bin/roihu/wrappers/"
-          dest: "{{ appl_dir }}/roihu-agent-env/bin/wrappers/v1/"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin/wrappers"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/apptainer/"
-          dest: "{{ appl_dir }}/roihu-agent-env/apptainer/"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/apptainer/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/config/"
-          dest: "{{ appl_dir }}/roihu-agent-env/config/"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/config/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/socket-bridge/"
-          dest: "{{ appl_dir }}/roihu-agent-env/socket-bridge/"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/socket-bridge/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/build_roihu_agent_env.sh"
-          dest: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
-          mode: "u=rwx,g=rwx,o=rx"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
+          mode: "u=rwx,g=rwx,o=r"
         - src: "{{ playbook_dir }}/job-monitoring-sdk/"
-          dest: "{{ appl_dir }}/roihu-agent-env/job-monitoring-sdk/"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk/"
           mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/module_template"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/modulefiles/module_template"
+          mode: "u=rwx,g=rwx,o=r"
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."
       ansible.builtin.copy:
@@ -67,31 +73,30 @@
         mode: "u=rw,g=rw,o=r"
         group: "r_installation_general"
       loop:
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/module_template"
-          dest: "{{ modulefiles_dir }}/roihu-agent-env/module_template"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/opencode/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/opencode/"
           dest: "{{ modulefiles_dir }}/opencode/"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/claude/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/claude/"
           dest: "{{ modulefiles_dir }}/claude/"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/codex/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/codex/"
           dest: "{{ modulefiles_dir }}/codex/"
 
     - name: "Copy slurm-mcp binaries."
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ appl_dir }}/roihu-agent-env/bin/slurm-mcp/v1/"
+        dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin/slurm-mcp"
         mode: "u=rwx,g=rwx,o=rx"
       with_fileglob:
         - "{{ playbook_dir }}/slurm-mcp/slurm-mcp-linux-{{ arch }}-v*"
 
+    # TODO double-check this overwrites the previous cronjob
     - name: "Create cronjobs for container building."
       ansible.builtin.cron:
         name: "Build roihu-agent-env container"
         minute: "0"
         hour: "5"
         weekday: "0"
-        job: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+        job: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
 
     - name: "Build the containers for this deployment"
-      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/build_roihu_agent_env.sh"
+      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
 
