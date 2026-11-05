@@ -68,7 +68,7 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${MODULE_DIR}/module_template" \
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${script_dir}/modulefiles/module_template" \
         > "${MODULE_DIR}/${image_version}.lua"
     sed -i "s/__IMAGE_DIR__/${AGENT_ENV_IMAGE_DIR}/" "${MODULE_DIR}/${image_version}.lua"
     sed -i "s/__AGENT_ENV_ROOT/${AGENT_ENV_ROOT}/" "${MODULE_DIR}/${image_version}.lua"

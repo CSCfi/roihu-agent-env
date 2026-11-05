@@ -62,6 +62,9 @@
         - src: "{{ playbook_dir }}/job-monitoring-sdk/"
           dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk/"
           mode: "u=rwx,g=rwx,o=rx"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/module_template"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/modulefiles/module_template"
+          mode: "u=rwx,g=rwx,o=rx"
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."
       ansible.builtin.copy:
@@ -70,13 +73,11 @@
         mode: "u=rw,g=rw,o=r"
         group: "r_installation_general"
       loop:
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/module_template"
-          dest: "{{ modulefiles_dir }}/roihu-agent-env/module_template"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/opencode/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/opencode/"
           dest: "{{ modulefiles_dir }}/opencode/"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/claude/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/claude/"
           dest: "{{ modulefiles_dir }}/claude/"
-        - src: "{{ playbook_dir }}/modulefiles/roihu/{{ arch }}/codex/"
+        - src: "{{ playbook_dir }}/modulefiles/roihu/codex/"
           dest: "{{ modulefiles_dir }}/codex/"
 
     - name: "Copy slurm-mcp binaries."
