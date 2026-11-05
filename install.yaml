@@ -58,13 +58,13 @@
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/build_roihu_agent_env.sh"
           dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
-          mode: "u=rwx,g=rwx,o=rx"
+          mode: "u=rwx,g=rwx,o=r"
         - src: "{{ playbook_dir }}/job-monitoring-sdk/"
           dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/modulefiles/roihu/module_template"
           dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/modulefiles/module_template"
-          mode: "u=rwx,g=rwx,o=rx"
+          mode: "u=rwx,g=rwx,o=r"
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."
       ansible.builtin.copy:
