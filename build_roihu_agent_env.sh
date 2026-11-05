@@ -21,6 +21,10 @@ set -x
 #done
 #set -- "${positional_args[@]}" # restore positional parameters
 
+# Harcode these paths for simplicity.
+AGENT_ENV_ROOT="/appl/soft/manual/general/$( arch )/roihu-agent-env"
+AGENT_ENV_IMAGE_DIR="/appl/soft/manual/general/$( arch )/roihu-agent-env/images"
+MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/roihu-agent-env"
 
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
@@ -64,9 +68,10 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/roihu-agent-env"
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" ${MODULE_DIR}/module_template \
-        > ${MODULE_DIR}/${image_version}.lua
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${MODULE_DIR}/module_template" \
+        > "${MODULE_DIR}/${image_version}.lua"
+    sed -i "s/__IMAGE_DIR__/${AGENT_ENV_IMAGE_DIR}/" "${MODULE_DIR}/${image_version}.lua"
+    sed -i "s/__AGENT_ENV_ROOT/${AGENT_ENV_ROOT}/" "${MODULE_DIR}/${image_version}.lua"
 
     # Set the new module as default
     rm -f ${MODULE_DIR}/default
@@ -98,12 +103,12 @@ fi
 # cd ..
 
 
-if [ ! -d "/appl/soft/manual/general/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
+if [ ! -d "${script_dir}/job-monitoring-sdk" ]; then
   echo "job-monitoring-sdk does not exist."
   exit 1
 fi
 
-if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/slurm-mcp/v1 )" ]; then
+if [ ! "$( ls -A ${script_dir}/bin/slurm-mcp )" ]; then
   echo "slurm-mcp binary does not exist."
   exit 1
 fi
@@ -122,12 +127,9 @@ apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "BOOTSTRAP=docker" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
-    images/$container_name apptainer/${container}.def
+    "${AGENT_ENV_IMAGE_DIR}/${container_name}" apptainer/${container}.def
 
 # Generate modulefile
 create_agent_env_module $container_name $agent_env_version
 
-# Fix permissions
-chgrp -R project_2001659 images
-chgrp -R project_2001659 bin
 cd $old_dir
