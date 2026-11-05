@@ -19,10 +19,10 @@
         - "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin"
         - "{{ appl_dir }}/roihu-agent-env/{{ version }}/apptainer"
         - "{{ appl_dir }}/roihu-agent-env/{{ version }}/config"
+        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/socket-bridge"
 
         # TODO how to handle these
         - "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin/slurm-mcp"
-        - "{{ appl_dir }}/roihu-agent-env/{{ version }}/socket-bridge"
         - "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk"
 
     - name: "Create directories"

@@ -96,11 +96,10 @@ else
 fi
 
 
-# Build socket bridge binary
-# Only needs to be done once.
-# cd socket-bridge
-# CGO_ENABLED=0 go build -o socket-bridge .
-# cd ..
+#Build socket bridge binary
+cd socket-bridge
+CGO_ENABLED=0 go build -o "$socket_bridge_file" .
+cd ..
 
 
 if [ ! -d "${script_dir}/job-monitoring-sdk" ]; then
