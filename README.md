@@ -167,9 +167,9 @@ python3 -m pip install --user ansible-core
 
 The ansible deployment uses your local repository. Make sure you're working on a clean clone of the repo with no untracked files.
 
-Make sure the Slurm MCP and job-monitoring-sdk are up-to-date, and build slurm-mcp binary:
+Make sure the Slurm MCP and job-monitoring-sdk match what the remote expects, and build slurm-mcp binary:
 ```bash
-git submodule update --remote
+git submodule update --init
 make --directory=slurm-mcp clean build
 ```
 
