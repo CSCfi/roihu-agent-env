@@ -4,6 +4,13 @@ set -euo pipefail
 set -x
 
 #
+ # Build roihu-agent-env container and create modules.
+# Usage:
+#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR>
+#   each argument defaults to current locations at the time of writing if not given.
+#
+
+#
 # Parse arguments. Currently unused
 #
 #positional_args=() # Unused for now. Keeping the logic for the future
@@ -21,10 +28,11 @@ set -x
 #done
 #set -- "${positional_args[@]}" # restore positional parameters
 
-# Harcode these paths for simplicity.
-AGENT_ENV_ROOT="/appl/soft/manual/general/$( arch )/roihu-agent-env"
-AGENT_ENV_IMAGE_DIR="/appl/soft/manual/general/$( arch )/roihu-agent-env/images"
-MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/roihu-agent-env"
+
+arch=$( arch )
+AGENT_ENV_ROOT="${1:-/appl/soft/manual/general/${arch}/roihu-agent-env}"
+AGENT_ENV_IMAGE_DIR="${2:-/appl/soft/manual/general/${arch}/roihu-agent-env/images}"
+MODULE_DIR="${3:-/appl/modulefiles/manual/general/${arch}/roihu-agent-env}"
 
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
@@ -59,10 +67,9 @@ create_agent_env_module () {
     image_name="$1"
     image_version="$2"
 
-    arch=$( arch )
-    if [[ $arch == "aarch64" ]]; then
+    if [[ "$arch" == "aarch64" ]]; then
         node_type="gpu"
-    elif [[ $arch == "x86_64" ]]; then
+    elif [[ "$arch" == "x86_64" ]]; then
         node_type="cpu"
     else
         echo "Parsing of the processor architecture failed"
@@ -81,12 +88,11 @@ create_agent_env_module () {
 
 
 # Parses if we are on roihu-cpu or roihu-gpu.
-node_arch=$( arch )
-if [[ $node_arch == "aarch64" ]]; then
+if [[ "$arch" == "aarch64" ]]; then
     socket_bridge_file="socket-bridge-aarch64"
     base_image_commit="sha256:e37af8973775b7eadc963370a0028f5f7762e4e48deb7e96b2cc7d6f81f9c71c"
     base_image="satama.csc.fi/r_installation_spack/core-gpu-deps@${base_image_commit}"
-elif [[ $node_arch == "x86_64" ]]; then
+elif [[ "$arch" == "x86_64" ]]; then
     socket_bridge_file="socket-bridge-x86_64"
     base_image_commit="sha256:96b63b2796e0cd8131cd0b8052684e9514f41fdedd73297b1fe74214b22401be"
     base_image="satama.csc.fi/r_installation_spack/core-cpu-deps@${base_image_commit}"
@@ -116,7 +122,7 @@ mkdir -p images
 
 
 # Build the container
-container_name=${container}-${node_arch}-${agent_env_version}.sif
+container_name="${container}-${arch}-${agent_env_version}.sif"
 apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
     --build-arg "BASE_IMAGE_COMMIT=$base_image_commit" \
