@@ -16,7 +16,8 @@ This module provides the following commands:
 * codex (experimental)
 
 More information:
-* https://gitlab.ci.csc.fi/compen/hpc-support/roihu-agent-env
+* https://github.com/CSCfi/roihu-agent-env
+* opencode / codex / claude --roihu-help
 ]])
 
 --
