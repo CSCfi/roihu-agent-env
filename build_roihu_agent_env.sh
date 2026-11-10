@@ -4,6 +4,13 @@ set -euo pipefail
 set -x
 
 #
+# Build roihu-agent-env container and create modules.
+# Usage:
+#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR>
+#   each argument defaults to current locations at the time of writing if not given.
+#
+
+#
 # Parse arguments. Currently unused
 #
 #positional_args=() # Unused for now. Keeping the logic for the future
@@ -21,6 +28,11 @@ set -x
 #done
 #set -- "${positional_args[@]}" # restore positional parameters
 
+
+arch=$( arch )
+AGENT_ENV_ROOT="${1:-/appl/soft/manual/general/${arch}/roihu-agent-env}"
+AGENT_ENV_IMAGE_DIR="${2:-/appl/soft/manual/general/${arch}/roihu-agent-env/images}"
+MODULE_DIR="${3:-/appl/modulefiles/manual/general/${arch}/roihu-agent-env}"
 
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
@@ -45,28 +57,26 @@ cd $script_dir
 create_agent_env_module () {
     # Create a module file from template.
     #
-    # Currently only designed for roihu-agent-env, and only replaces 
-    # __AGENT_IMAGE_NAME__ with the actual name.
-    #
     # Usage:
-    # create_agent_env_module IMAGE_NAME IMAGE_VERSION
+    #   create_agent_env_module IMAGE_NAME IMAGE_VERSION
     #
 
     image_name="$1"
     image_version="$2"
 
-    arch=$( arch )
-    if [[ $arch == "aarch64" ]]; then
+    if [[ "$arch" == "aarch64" ]]; then
         node_type="gpu"
-    elif [[ $arch == "x86_64" ]]; then
+    elif [[ "$arch" == "x86_64" ]]; then
         node_type="cpu"
     else
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    MODULE_DIR="/appl/modulefiles/manual/general/$( arch )/roihu-agent-env"
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" ${MODULE_DIR}/module_template \
-        > ${MODULE_DIR}/${image_version}.lua
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${script_dir}/module_template" \
+        > "${MODULE_DIR}/${image_version}.lua"
+    # Slash delimiter doesn't play nicely with paths. Path can't include ':', but that shouldn't be an issue.
+    sed -i "s:__IMAGE_DIR__:${AGENT_ENV_IMAGE_DIR}:" "${MODULE_DIR}/${image_version}.lua"
+    sed -i "s:__AGENT_ENV_ROOT:${AGENT_ENV_ROOT}:" "${MODULE_DIR}/${image_version}.lua"
 
     # Set the new module as default
     rm -f ${MODULE_DIR}/default
@@ -76,12 +86,11 @@ create_agent_env_module () {
 
 
 # Parses if we are on roihu-cpu or roihu-gpu.
-node_arch=$( arch )
-if [[ $node_arch == "aarch64" ]]; then
+if [[ "$arch" == "aarch64" ]]; then
     socket_bridge_file="socket-bridge-aarch64"
     base_image_commit="sha256:e37af8973775b7eadc963370a0028f5f7762e4e48deb7e96b2cc7d6f81f9c71c"
     base_image="satama.csc.fi/r_installation_spack/core-gpu-deps@${base_image_commit}"
-elif [[ $node_arch == "x86_64" ]]; then
+elif [[ "$arch" == "x86_64" ]]; then
     socket_bridge_file="socket-bridge-x86_64"
     base_image_commit="sha256:96b63b2796e0cd8131cd0b8052684e9514f41fdedd73297b1fe74214b22401be"
     base_image="satama.csc.fi/r_installation_spack/core-cpu-deps@${base_image_commit}"
@@ -91,28 +100,25 @@ else
 fi
 
 
-# Build socket bridge binary
-# Only needs to be done once.
-# cd socket-bridge
-# CGO_ENABLED=0 go build -o socket-bridge .
-# cd ..
+#Build socket bridge binary
+cd socket-bridge
+CGO_ENABLED=0 go build -o "$socket_bridge_file" .
+cd ..
 
 
-if [ ! -d "/appl/soft/manual/general/$( arch )/roihu-agent-env/job-monitoring-sdk" ]; then
+if [ ! -d "${script_dir}/job-monitoring-sdk" ]; then
   echo "job-monitoring-sdk does not exist."
   exit 1
 fi
 
-if [ ! "$( ls -A /appl/soft/manual/general/$( arch )/roihu-agent-env/bin/slurm-mcp/v1 )" ]; then
+if [ ! "$( ls -A ${script_dir}/bin/slurm-mcp )" ]; then
   echo "slurm-mcp binary does not exist."
   exit 1
 fi
 
-mkdir -p images
-
 
 # Build the container
-container_name=${container}-${node_arch}-${agent_env_version}.sif
+container_name="${container}-${arch}-${agent_env_version}.sif"
 apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
     --build-arg "BASE_IMAGE_COMMIT=$base_image_commit" \
@@ -122,12 +128,9 @@ apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "BOOTSTRAP=docker" \
     --build-arg "BASE_IMAGE=$base_image" \
     --build-arg "SOCKET_BRIDGE_FILE=$socket_bridge_file" \
-    images/$container_name apptainer/${container}.def
+    "${AGENT_ENV_IMAGE_DIR}/${container_name}" apptainer/${container}.def
 
 # Generate modulefile
 create_agent_env_module $container_name $agent_env_version
 
-# Fix permissions
-chgrp -R project_2001659 images
-chgrp -R project_2001659 bin
 cd $old_dir
