@@ -79,11 +79,11 @@ create_agent_env_module () {
 node_arch=$( arch )
 if [[ $node_arch == "aarch64" ]]; then
     socket_bridge_file="socket-bridge-aarch64"
-    base_image_commit="sha256:95a34da33f1cdc53d21af305f5a1e6fff8d1116aa34918a104dd0d2aadefdf5e"
+    base_image_commit="sha256:e37af8973775b7eadc963370a0028f5f7762e4e48deb7e96b2cc7d6f81f9c71c"
     base_image="satama.csc.fi/r_installation_spack/core-gpu-deps@${base_image_commit}"
 elif [[ $node_arch == "x86_64" ]]; then
     socket_bridge_file="socket-bridge-x86_64"
-    base_image_commit="sha256:36643a49046f2bcb8220daf4e176655056a5ee00883c59f3af8698f50ee383a5"
+    base_image_commit="sha256:96b63b2796e0cd8131cd0b8052684e9514f41fdedd73297b1fe74214b22401be"
     base_image="satama.csc.fi/r_installation_spack/core-cpu-deps@${base_image_commit}"
 else
     echo "Parsing of the processor architecture failed"
