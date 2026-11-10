@@ -165,6 +165,8 @@ Deployment to roihu is done with an ansible script. Install ansible on your mach
 python3 -m pip install --user ansible-core
 ```
 
+The ansible deployment uses your local repository. Make sure you're working on a clean clone of the repo with no untracked files.
+
 Make sure the Slurm MCP and job-monitoring-sdk are up-to-date, and build slurm-mcp binary:
 ```bash
 git submodule update --remote

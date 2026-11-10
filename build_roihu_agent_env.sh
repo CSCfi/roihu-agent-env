@@ -4,7 +4,7 @@ set -euo pipefail
 set -x
 
 #
- # Build roihu-agent-env container and create modules.
+# Build roihu-agent-env container and create modules.
 # Usage:
 #   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR>
 #   each argument defaults to current locations at the time of writing if not given.
@@ -57,11 +57,8 @@ cd $script_dir
 create_agent_env_module () {
     # Create a module file from template.
     #
-    # Currently only designed for roihu-agent-env, and only replaces 
-    # __AGENT_IMAGE_NAME__ with the actual name.
-    #
     # Usage:
-    # create_agent_env_module IMAGE_NAME IMAGE_VERSION
+    #   create_agent_env_module IMAGE_NAME IMAGE_VERSION
     #
 
     image_name="$1"
