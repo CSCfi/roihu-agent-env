@@ -63,7 +63,7 @@
           dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/job-monitoring-sdk/"
           mode: "u=rwx,g=rwx,o=rx"
         - src: "{{ playbook_dir }}/modulefiles/roihu/module_template"
-          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/modulefiles/module_template"
+          dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/module_template"
           mode: "u=rwx,g=rwx,o=r"
 
     - name: "Create modulefile. For security reasons the group is `r_installation_general`."
@@ -98,5 +98,5 @@
         job: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
 
     - name: "Build the containers for this deployment"
-      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh"
+      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh {{ appl_dir }}/roihu-agent-env/{{ version }} {{ appl_dir }}/roihu-agent-env/images {{ modulefiles_dir }}/roihu-agent-env"
 

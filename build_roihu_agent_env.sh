@@ -75,10 +75,11 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
-    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${script_dir}/modulefiles/module_template" \
+    sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${script_dir}/module_template" \
         > "${MODULE_DIR}/${image_version}.lua"
-    sed -i "s/__IMAGE_DIR__/${AGENT_ENV_IMAGE_DIR}/" "${MODULE_DIR}/${image_version}.lua"
-    sed -i "s/__AGENT_ENV_ROOT/${AGENT_ENV_ROOT}/" "${MODULE_DIR}/${image_version}.lua"
+    # Slash delimiter doesn't play nicely with paths. Path can't include ':', but that shouldn't be an issue.
+    sed -i "s:__IMAGE_DIR__:${AGENT_ENV_IMAGE_DIR}:" "${MODULE_DIR}/${image_version}.lua"
+    sed -i "s:__AGENT_ENV_ROOT:${AGENT_ENV_ROOT}:" "${MODULE_DIR}/${image_version}.lua"
 
     # Set the new module as default
     rm -f ${MODULE_DIR}/default
@@ -117,8 +118,6 @@ if [ ! "$( ls -A ${script_dir}/bin/slurm-mcp )" ]; then
   echo "slurm-mcp binary does not exist."
   exit 1
 fi
-
-mkdir -p images
 
 
 # Build the container
