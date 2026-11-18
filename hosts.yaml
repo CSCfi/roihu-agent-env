@@ -4,6 +4,7 @@ roihu_cpu:
       ansible_connection: "ssh"
       ansible_python_interpreter: "/usr/bin/python3.9"
   vars:
+    version: "1.0"
     group: "r_installation_general"
     appl_dir: "/appl/soft/manual/general/x86_64"
     modulefiles_dir: "/appl/modulefiles/manual/general/x86_64"
@@ -14,6 +15,7 @@ roihu_gpu:
       ansible_connection: "ssh"
       ansible_python_interpreter: "/usr/bin/python3.9"
   vars:
+    version: "1.0"
     group: "r_installation_general"
     appl_dir: "/appl/soft/manual/general/aarch64"
     modulefiles_dir: "/appl/modulefiles/manual/general/aarch64"
