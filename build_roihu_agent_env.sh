@@ -6,9 +6,8 @@ set -x
 #
 # Build roihu-agent-env container and create modules.
 # Usage:
-#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR>
-#   each argument defaults to current locations at the time of writing if not given.
-#
+#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR> <AGENT_ENV_COMMIT>
+#   each argument defaults to how deployment worked before 1.0 if not given.
 
 #
 # Parse arguments. Currently unused
@@ -33,6 +32,8 @@ arch=$( arch )
 AGENT_ENV_ROOT="${1:-/appl/soft/manual/general/${arch}/roihu-agent-env}"
 AGENT_ENV_IMAGE_DIR="${2:-/appl/soft/manual/general/${arch}/roihu-agent-env/images}"
 MODULE_DIR="${3:-/appl/modulefiles/manual/general/${arch}/roihu-agent-env}"
+# Ansible deployment doesn't copy .git over, so this needs to be passed as an argument there.
+IMAGE_COMMIT="${4:-$( git rev-parse HEAD )}"
 
 agent_env_version=$( date +'%y.%m.%d' )
 container="roihu-agent-env"
@@ -120,7 +121,7 @@ fi
 # Build the container
 container_name="${container}-${arch}-${agent_env_version}.sif"
 apptainer build --fakeroot --writable-tmpfs --force \
-    --build-arg "IMAGE_COMMIT=$( git show --pretty='format:%h' -s HEAD )" \
+    --build-arg "IMAGE_COMMIT=$IMAGE_COMMIT" \
     --build-arg "BASE_IMAGE_COMMIT=$base_image_commit" \
     --build-arg "OPENCODE_VERSION=$opencode_version" \
     --build-arg "CLAUDE_VERSION=$claude_version" \
