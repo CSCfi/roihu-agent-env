@@ -80,7 +80,7 @@
         - src: "{{ playbook_dir }}/modulefiles/roihu/codex/"
           dest: "{{ modulefiles_dir }}/codex/"
 
-    - name: "Copy slurm-mcp binaries."
+    - name: "Copy slurm-mcp files"
       ansible.builtin.copy:
         src: "{{ item }}"
         dest: "{{ appl_dir }}/roihu-agent-env/{{ version }}/bin/slurm-mcp"

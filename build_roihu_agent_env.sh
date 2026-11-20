@@ -3,6 +3,9 @@
 set -euo pipefail
 set -x
 
+# Make created files group-writable so other members of the installation group can overwrite them.
+umask 002
+
 #
 # Build roihu-agent-env container and create modules.
 # Usage:
@@ -76,6 +79,8 @@ create_agent_env_module () {
         echo "Parsing of the processor architecture failed"
         exit 1
     fi
+    # Remove first: an existing modulefile from an earlier same-day build may be owned by another user.
+    rm -f "${MODULE_DIR}/${image_version}.lua"
     sed "s/__AGENT_IMAGE_NAME__/${image_name}/" "${script_dir}/module_template" \
         > "${MODULE_DIR}/${image_version}.lua"
     # Slash delimiter doesn't play nicely with paths. Path can't include ':', but that shouldn't be an issue.
