@@ -6,7 +6,7 @@ set -x
 #
 # Build roihu-agent-env container and create modules.
 # Usage:
-#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR> <AGENT_ENV_COMMIT>
+#   build_roihu_agent_env.sh <AGENT_ENV_ROOT> <AGENT_ENV_IMAGE_DIR> <MODULE_DIR> <AGENT_ENV_COMMIT> <JOBMON_SDK_VERSION>
 #   each argument defaults to how deployment worked before 1.0 if not given.
 
 #
@@ -53,6 +53,9 @@ codex_version="latest"
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 old_dir=$(pwd)
 cd $script_dir
+
+# Ansible deployment doesn't copy the submodule's git metadata, so this needs to be passed as an argument there.
+JOBMON_SDK_VERSION="${5:-$( git -C job-monitoring-sdk describe --tags --abbrev=0 )}"
 
 
 create_agent_env_module () {
@@ -122,6 +125,7 @@ fi
 container_name="${container}-${arch}-${agent_env_version}.sif"
 apptainer build --fakeroot --writable-tmpfs --force \
     --build-arg "IMAGE_COMMIT=$IMAGE_COMMIT" \
+    --build-arg "JOBMON_SDK_VERSION=$JOBMON_SDK_VERSION" \
     --build-arg "BASE_IMAGE_COMMIT=$base_image_commit" \
     --build-arg "OPENCODE_VERSION=$opencode_version" \
     --build-arg "CLAUDE_VERSION=$claude_version" \

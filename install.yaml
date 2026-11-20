@@ -94,14 +94,20 @@
         cmd: "git rev-parse HEAD"
       register: commit_hash
 
+    - name: "Get job-monitoring-sdk version"
+      local_action: ansible.builtin.command
+      args:
+        cmd: "git -C {{ playbook_dir }}/job-monitoring-sdk describe --tags --abbrev=0"
+      register: jobmon_sdk_version
+
     - name: "Create cronjobs for container building."
       ansible.builtin.cron:
         name: "Build roihu-agent-env container"
         minute: "0"
         hour: "5"
         weekday: "0"
-        job: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh {{ appl_dir }}/roihu-agent-env/{{ version }} {{ appl_dir }}/roihu-agent-env/images {{ modulefiles_dir }}/roihu-agent-env {{commit_hash.stdout}}"
+        job: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh {{ appl_dir }}/roihu-agent-env/{{ version }} {{ appl_dir }}/roihu-agent-env/images {{ modulefiles_dir }}/roihu-agent-env {{commit_hash.stdout}} {{jobmon_sdk_version.stdout}}"
 
     - name: "Build the containers for this deployment"
-      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh {{ appl_dir }}/roihu-agent-env/{{ version }} {{ appl_dir }}/roihu-agent-env/images {{ modulefiles_dir }}/roihu-agent-env {{commit_hash.stdout}}"
+      ansible.builtin.command: "{{ appl_dir }}/roihu-agent-env/{{ version }}/build_roihu_agent_env.sh {{ appl_dir }}/roihu-agent-env/{{ version }} {{ appl_dir }}/roihu-agent-env/images {{ modulefiles_dir }}/roihu-agent-env {{commit_hash.stdout}} {{jobmon_sdk_version.stdout}}"
 

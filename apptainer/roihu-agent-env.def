@@ -5,10 +5,12 @@ From: {{ BASE_IMAGE }}
     Author mira.salmensaari@csc.fi
     Image-commit {{ IMAGE_COMMIT }}
     Base-image-commit {{ BASE_IMAGE_COMMIT }}
+    Jobmon-sdk-version {{ JOBMON_SDK_VERSION }}
 
 %arguments
     IMAGE_COMMIT=
     BASE_IMAGE_COMMIT=
+    JOBMON_SDK_VERSION=
     BOOTSTRAP=docker
     BASE_IMAGE=satama.csc.fi/r_installation_spack/core-cpu-deps@sha256:36643a49046f2bcb8220daf4e176655056a5ee00883c59f3af8698f50ee383a5
     SOCKET_BRIDGE_FILE=socket-bridge-x86_64
@@ -72,7 +74,8 @@ From: {{ BASE_IMAGE }}
     # Install the job-monitoring python sdk, for the job-efficiency skill. https://gitlab.ci.csc.fi/compen/job-monitoring/job-monitoring-sdk.git
     dnf install -y python3-pip
     cd /opt/job-monitoring-sdk
-    pip install ./
+    # The submodule's git metadata isn't copied, so hatch-vcs can't detect the version itself.
+    SETUPTOOLS_SCM_PRETEND_VERSION={{ JOBMON_SDK_VERSION }} pip install ./
     pip install pandas
 
 
